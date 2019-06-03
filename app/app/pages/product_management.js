@@ -1,11 +1,15 @@
+import React from "react"
+import CustomHead from "../components/CustomHead"
+import NavBar from "../components/NavBar"
+
 function HiThere() {
   return (
     <div>
-      <Header />
-      <DynamicComponent />
-      <p>HOME PAGE is here!</p>
+        <CustomHead />
+        <NavBar active={"product"}/>
+        <p>Products is here!</p>
     </div>
-  );
+  )
 }
 
 export default HiThere;
