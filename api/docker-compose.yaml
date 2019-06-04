@@ -1,8 +1,15 @@
 version: "3.1"
+
+networks:
+    app-tier:
+        driver: bridge
+
 services:
   nodeapp:
     container_name: node
     image: node:lts-stretch-slim
+    networks:
+        - app-tier
     ports:
       - "3000:3000"
     working_dir: /nodeapp
@@ -11,8 +18,7 @@ services:
     depends_on:
       - mysqlserver
     environment:
-        MYSQL_HOST: mysqlserver
-        DB_HOST: mysqlserver
+        DB_HOSTNAME: mysqlserver
         NODE_ENV: development
         PORT: 3000
     command: >
@@ -25,6 +31,8 @@ services:
 
   mysqlserver:
     container_name: mysql_rest
+    networks:
+        - app-tier
     image: mysql:8.0.16
     command: --default-authentication-plugin=mysql_native_password
     environment:
@@ -38,6 +46,8 @@ services:
   phpmyadmin:
     container_name: phpmyadmin_rest
     image: phpmyadmin/phpmyadmin:4.7
+    networks:
+        - app-tier
     environment:
       PMA_HOST: mysqlserver
       PMA_PORT: 3306

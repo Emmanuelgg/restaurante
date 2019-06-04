@@ -88,7 +88,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -899,7 +899,7 @@ function (_Component) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 var ENV = {
-  API_ROUTE: "http://localhost:3000/"
+  API_ROUTE: "http://localhost:3000/api/"
 };
 /* harmony default export */ __webpack_exports__["default"] = (ENV);
 
@@ -1722,7 +1722,7 @@ function productManagment() {
 
 /***/ }),
 
-/***/ 5:
+/***/ 3:
 /*!*******************************************!*\
   !*** multi ./pages/product_management.js ***!
   \*******************************************/

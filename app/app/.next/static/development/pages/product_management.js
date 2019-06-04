@@ -806,7 +806,7 @@ function (_Component) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 var ENV = {
-  API_ROUTE: "http://localhost:3000/"
+  API_ROUTE: "http://localhost:3000/api/"
 };
 /* harmony default export */ __webpack_exports__["default"] = (ENV);
 
@@ -11307,7 +11307,7 @@ function productManagment() {
 
 /***/ }),
 
-/***/ 2:
+/***/ 0:
 /*!*************************************************************************************************************************!*\
   !*** multi next-client-pages-loader?page=%2Fproduct_management&absolutePagePath=%2Fapp%2Fpages%2Fproduct_management.js ***!
   \*************************************************************************************************************************/
@@ -11330,5 +11330,5 @@ module.exports = dll_6dc2816e14fab51b8269;
 
 /***/ })
 
-},[[2,"static/runtime/webpack.js"]]]);
+},[[0,"static/runtime/webpack.js"]]]);
 //# sourceMappingURL=product_management.js.map
