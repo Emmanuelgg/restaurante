@@ -42,7 +42,7 @@ services:
       PMA_HOST: mysqlserver
       PMA_PORT: 3306
     ports:
-      - "9000:80"
+      - "4000:80"
     depends_on:
       - mysqlserver
     volumes:
