@@ -14,16 +14,27 @@ var connection = mysql.createConnection({
 
 
 
-router.post('/get/product/all', (req, res) => {
+router.post('/get/product/add', (req, res) => {
     connection.connect()
     console.log(req.body)
-    connection.query('SELECT 1 + 1 AS solution', function(err, rows, fields) {
+    let query = insert(
+        "product",
+        "id_package_type, id_unit, code, name, quantity_package, price, image_url",
+        "1,2,3,4,5,6,7"
+    )
+    connection.query(query, function(err, rows, fields) {
       if (err) throw err
-      console.log('The solution is: ', rows[0].solution)
+      console.log("ok");
     })
-    console.log("hola")
     connection.end()
 
 })
+
+var insert = (table, fields = "", values) => {
+    let query = `INSERT INTO ${table} (${fields}) VALUES (${values})`
+    if (fields = "")
+        query = `INSERT INTO ${table} VALUES (${values})`
+    return query
+}
 
 module.exports = router
