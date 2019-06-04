@@ -1,15 +1,16 @@
 import React from "react"
 import CustomHead from "../components/CustomHead"
 import NavBar from "../components/NavBar"
+import FormProduct from "../components/FormProduct"
 
-function HiThere() {
+function productManagment() {
   return (
     <div>
         <CustomHead />
         <NavBar active={"product"}/>
-        <p>Products is here!</p>
+        <FormProduct/>
     </div>
   )
 }
 
-export default HiThere;
+export default productManagment;
