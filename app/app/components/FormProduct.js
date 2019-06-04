@@ -19,7 +19,7 @@ class FormPrduct extends Component {
     }
 
     handlePostRequest(event) {
-        fetch(`${ENV.API_ROUTE}product_add`, {
+        fetch(`${ENV.API_ROUTE}get/product/all`, {
             method: "post",
             headers: {
                 'Accept': 'application/json',

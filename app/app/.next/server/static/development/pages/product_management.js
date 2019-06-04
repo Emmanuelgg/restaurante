@@ -437,7 +437,7 @@ function (_Component) {
   }, {
     key: "handlePostRequest",
     value: function handlePostRequest(event) {
-      fetch("".concat(_config_js__WEBPACK_IMPORTED_MODULE_8__["default"].API_ROUTE, "product_add"), {
+      fetch("".concat(_config_js__WEBPACK_IMPORTED_MODULE_8__["default"].API_ROUTE, "get/product/all"), {
         method: "post",
         headers: {
           'Accept': 'application/json',
