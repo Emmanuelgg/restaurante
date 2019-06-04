@@ -1,11 +1,16 @@
 # Folders #
 ############
 api/db_rest/
+<<<<<<< HEAD
 api/nodeapp/node_modules/
 api/conf/
 
 app/app/node_modules/
 
+=======
+api/conf/
+
+>>>>>>> 10e149b0d539bf7c3c403c7c6736fd4538968b76
 
 # Packages #
 ############
