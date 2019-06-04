@@ -11,7 +11,13 @@ Both compose (Back and front)
 docker-compose up  
 
 # Used dependences
+Compse Api  
 npm install express --save  
 npm install nodemon --save-dev  
 npm install mysql --save  
 npm install --save next react react-dom  
+  
+Compose App
+npm install next --save  
+npm install react --save  
+npm install react-dom --save  
