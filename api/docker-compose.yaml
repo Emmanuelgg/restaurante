@@ -1,4 +1,4 @@
-version: "3"
+version: "2"
 services:
   nodeapp:
     container_name: node
@@ -9,46 +9,45 @@ services:
     volumes:
       - ./nodeapp:/nodeapp
     depends_on:
-      - postgres
+      - mysqlserver
     environment:
-        DB_HOST: postgres
-        DATABASE_URL: postgres://admin:123456@postgres:5432/db_rest
+        MYSQL_HOST: mysqlserver
+        DB_HOST: mysqlserver
         NODE_ENV: development
         PORT: 3000
     command: >
         bash -c "pwd
         && npm install express --save
         && npm install nodemon --save-dev
+        && npm install mysql
         && npm start"
 
-  postgres:
-    container_name: postgres
-    image: postgres:9.6.13-alpine
-    ports:
-      - "5432:5432"
+
+  mysqlserver:
+    container_name: mysql_rest
+    image: mysql:8.0.16
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: db_rest
-      PGDATA: /data/postgres
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: 123465
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: db_rest
+    ports:
+      - "3306:3306"
     volumes:
-      - ./db_rest:/var/lib/postgres
-    networks:
-      - postgres-compose-network
+      - ./db_rest:/var/lib/mysql
+      # - ./db/startup:/docker-entrypoint-initdb.d
 
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
+  phpmyadmin:
+    container_name: phpmyadmin_rest
+    image: phpmyadmin/phpmyadmin
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: 123456
+      MYSQL_USE: admin
+      MYSQL_ROOT_PASSWORD: 123456
+      PMA_HOST: mysqlserver
+      PMA_PORT: 3306
     ports:
-      - "3030:80"
+      - "9000:80"
     depends_on:
-      - postgres
-    networks:
-      - postgres-compose-network
-
-networks:
-  postgres-compose-network:
-    driver: bridge
+      - mysqlserver
+    volumes:
+      - ./conf/conf.php:/etc/phpmyadmin/config.user.inc.php
