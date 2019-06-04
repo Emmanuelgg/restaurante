@@ -5,7 +5,7 @@ networks:
         driver: bridge
 
 services:
-  nodeapp:
+  api:
     container_name: node
     image: node:lts-stretch-slim
     networks:
@@ -23,9 +23,6 @@ services:
         PORT: 3000
     command: >
         bash -c "pwd
-        && npm install express --save
-        && npm install nodemon --save-dev
-        && npm install mysql
         && npm start"
 
 

@@ -1,6 +1,6 @@
 version: "2"
 services:
-  nodeapp:
+  react:
     container_name: nodeapp
     image: node:lts-stretch-slim
     ports:
@@ -13,5 +13,4 @@ services:
         PORT: 3010
     command: >
         bash -c "pwd
-        && npm install --save next react react-dom
         && npm run dev -- -p 3010"

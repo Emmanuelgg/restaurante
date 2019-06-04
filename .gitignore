@@ -2,10 +2,12 @@
 ############
 
 api/db_rest/
-api/nodeapp/node_modules/
+!api/nodeapp/node_modules/.gitkeep
+api/nodeapp/node_modules/*
 api/conf/
 
-app/app/node_modules/
+!app/app/node_modules/.gitkeep
+app/app/node_modules/*
 app/app/.next/
 
 # Packages #
