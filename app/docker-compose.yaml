@@ -1,7 +1,7 @@
 version: "2"
 services:
   react:
-    container_name: nodeapp
+    container_name: react
     image: node:lts-stretch-slim
     ports:
       - "3010:3010"
