@@ -30,6 +30,7 @@ class CustomHead extends Component {
               <link rel="stylesheet" href="./static/css/flaticon.css"/>
               <link rel="stylesheet" href="./static/css/icomoon.css"/>
               <link rel="stylesheet" href="./static/css/style.css"/>
+              <link rel="stylesheet" href="./static/css/custom-style.css"/>
 
               <script src="./static/js/jquery.min.js"></script>
               <script src="./static/js/jquery-migrate-3.0.1.min.js"></script>

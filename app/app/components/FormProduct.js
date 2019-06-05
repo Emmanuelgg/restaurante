@@ -6,9 +6,66 @@ class FormPrduct extends Component {
         super(props)
             this.state = {
             file: "./static/images/not-found.png",
-            file_name: "Sin producto"
+            file_name: "Sin producto",
+            units: [],
+            packages: []
         }
         this.handleChange = this.handleChange.bind(this)
+    }
+
+    componentDidMount() {
+        this.getUnit()
+        this.getPackageType()
+    }
+
+    getUnit() {
+        fetch(`${ENV.API_ROUTE}get`, {
+            method: "post",
+            cors: "cors",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                table: "unit"
+            })
+        })
+        .then(response => {return response.json()})
+        .then(res => {
+            if (res.status != 200)
+                return "Error"
+                let units = res.data.map(item => {
+                    return(
+                        <option key={"unit_"+item.id_unit} value={item.id_unit}>{item.name}</option>
+                    )
+                })
+                this.setState({units:units})
+        })
+    }
+
+    getPackageType() {
+        fetch(`${ENV.API_ROUTE}get`, {
+            method: "post",
+            cors: "cors",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                table: "package_type"
+            })
+        })
+        .then(response => {return response.json()})
+        .then(res => {
+            if (res.status != 200)
+                return "Error"
+                let packages = res.data.map(item => {
+                    return(
+                        <option key={"package_"+item.id_package_type} value={item.id_pakcage_type}>{item.name}</option>
+                    )
+                })
+                this.setState({packages:packages})
+        })
     }
 
     handleChange(event) {
@@ -25,15 +82,14 @@ class FormPrduct extends Component {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-
-            //make sure to serialize your JSON body
             body: JSON.stringify({
                 name: "myName",
                 password: "myPassword"
             })
         })
-        .then( (response) => {
-            //do something awesome that makes the world a better place
+        .then(response => {return response.json()})
+        .then(res => {
+            //do something
         })
     }
 
@@ -49,13 +105,19 @@ class FormPrduct extends Component {
                             <input type="text" name="name" className="form-control" placeholder="Descripción"/>
                         </div>
                         <div className="col-sd-12 col-md-6">
-                            <input type="text" name="package" className="form-control" placeholder="Empaque"/>
+                            <select name="id_package_type" className="form-control">
+                                <option value="0">Seleccione una opción...</option>
+                                {this.state.packages}
+                            </select>
                         </div>
                         <div className="col-sd-12 col-md-6">
                             <input type="text" name="quantity_by_package" className="form-control" placeholder="Cantidad por empaque"/>
                         </div>
                         <div className="col-sd-12 col-md-6">
-                            <input type="text" name="unit" className="form-control" placeholder="Unidad"/>
+                            <select name="id_unit" className="form-control">
+                                <option value="0">Seleccione una opción...</option>
+                                {this.state.units}
+                            </select>
                         </div>
                         <div className="col-sd-12 col-md-6">
                             <input type="text" name="price" className="form-control" placeholder="Precio"/>

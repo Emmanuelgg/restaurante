@@ -1,34 +1,64 @@
 const express = require('express')
 const router = express.Router()
 const app = express()
-
-
 var mysql = require("mysql")
-var connection = mysql.createConnection({
-  host     : 'mysqlserver',
-  user     : 'root',
-  password : '123456',
-  database : "db_rest",
-  port     : "3306"
-})
 
+var connection = null
+
+var connect = () => {
+    connection = mysql.createConnection({
+      host     : 'mysqlserver',
+      user     : 'root',
+      password : '123456',
+      database : "db_rest",
+      port     : "3306"
+    })
+    connection.connect()
+}
 
 
 router.post('/get/product/add', (req, res) => {
-    connection.connect()
-    console.log(req.body)
-    let query = insert(
-        "product",
-        "id_package_type, id_unit, code, name, quantity_package, price, image_url",
-        "1,2,3,4,5,6,7"
-    )
-    connection.query(query, function(err, rows, fields) {
-      if (err) throw err
-      console.log("ok");
-    })
-    connection.end()
+    if (req.body != undefined) {
+        connect()
+        console.log(req.body)
+        let query = insert(
+            "product",
+            "id_package_type, id_unit, code, name, quantity_package, price, image_url",
+            "1,2,3,4,5,6,7"
+        )
+        connection.query(query, function(err, rows, fields) {
+          if (err) throw err
+          console.log("ok");
+        })
+        connection.end()
+    }
+})
+
+router.post('/get', (req, res) => {
+    if (req.body != undefined) {
+        connect()
+        let table = req.body.table
+        let columns = req.body.columns
+        let where = req.body.where
+        let query = select(table, columns, where)
+        connection.query(query, function(err, rows, fields) {
+          if (err) throw err
+          let response = {
+              status: 200,
+              data: rows
+          }
+          res.send(response)
+          res.end()
+        })
+        connection.end()
+    }
 
 })
+
+var select = (table, columns = "*", where) => {
+    let query = `SELECT ${columns} FROM ${table} ${where}`
+    return query
+}
 
 var insert = (table, fields = "", values) => {
     let query = `INSERT INTO ${table} (${fields}) VALUES (${values})`
