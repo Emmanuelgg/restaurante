@@ -17,15 +17,19 @@ var connect = () => {
 }
 
 
-router.post('/get/product/add', (req, res) => {
+router.post('/add', (req, res) => {
     if (req.body != undefined) {
         connect()
-        console.log(req.body)
-        let query = insert(
-            "product",
-            "id_package_type, id_unit, code, name, quantity_package, price, image_url",
-            "1,2,3,4,5,6,7"
-        )
+        let query = ""
+        let table = req.body.table
+        let columns = req.body.columns != undefined ? req.body.columns : ""
+        let values = req.body.values
+
+        if (req.body.id == 0)
+            query = insert(table,columns,values)
+        else
+            query = update(req.body.id, table, columns, value)
+
         connection.query(query, function(err, rows, fields) {
           if (err) throw err
           console.log("ok");
@@ -39,7 +43,7 @@ router.post('/get', (req, res) => {
         connect()
         let table = req.body.table
         let columns = req.body.columns
-        let where = req.body.where
+        let where = req.body.where != undefined ? req.body.columns : ""
         let query = select(table, columns, where)
         connection.query(query, function(err, rows, fields) {
           if (err) throw err
@@ -60,10 +64,25 @@ var select = (table, columns = "*", where) => {
     return query
 }
 
-var insert = (table, fields = "", values) => {
-    let query = `INSERT INTO ${table} (${fields}) VALUES (${values})`
+var insert = (table, columns = "", values) => {
+    let query = `INSERT INTO ${table} (${columns}) VALUES (${values})`
     if (fields = "")
-        query = `INSERT INTO ${table} VALUES (${values})`
+        query = `INSERT INTO ${table} VALUES (${columns})`
+    return query
+}
+
+var update = (id, table, columns, values) => {
+    columns = columns.replace(" ", "")
+    columns = columns.split(",")
+    values = values.split(",")
+    let data = ""
+    for (var i = 0; i < columns.length; i++) {
+        if (i != columns.length-1)
+            data += `${columns[i]} = ${values[i]}, `
+        else
+            data += `${columns[i]} = ${values[i]}`
+    }
+    let query = `UPDATE ${table} SET ${data}  WHERE id_${table} = ${id}`
     return query
 }
 
