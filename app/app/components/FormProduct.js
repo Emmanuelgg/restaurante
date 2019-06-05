@@ -12,7 +12,7 @@ class FormPrduct extends Component {
             code: "",
             name: "",
             idPackageType: "",
-            quantityByPackage; "",
+            quantityByPackage: "",
             idUnit: "",
             price: "",
             idProduct: ""
@@ -101,13 +101,6 @@ class FormPrduct extends Component {
 
 
     handlePostRequest(event) {
-        code: "",
-        name: "",
-        idPackageType: "",
-        quantityByPackage; "",
-        idUnit: "",
-        price: "",
-        idProduct: ""
         event.preventDefault()
         fetch(`${ENV.API_ROUTE}get/product/add`, {
             method: "post",
