@@ -8,7 +8,7 @@ function productManagment() {
     <div>
         <CustomHead />
         <NavBar active={"product"}/>
-        <FormProduct/>
+        <FormProduct />
     </div>
   )
 }

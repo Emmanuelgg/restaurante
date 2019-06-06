@@ -1,10 +1,11 @@
 import React, {Component} from "react"
 import ENV from "../config.js"
+import ListProduct from "./ListProduct"
 
-class FormPrduct extends Component {
+class FormProduct extends Component {
     constructor(props){
         super(props)
-            this.state = {
+        this.state = {
             file: "./static/images/not-found.png",
             file_name: "Sin producto",
             units: [],
@@ -25,8 +26,9 @@ class FormPrduct extends Component {
         this.handleChangeIdUnit = this.handleChangeIdUnit.bind(this)
         this.handleChangePrice = this.handleChangePrice.bind(this)
         this.handleChangeIdProduct = this.handleChangeIdProduct.bind(this)
+        this.handlePostRequest = this.handlePostRequest.bind(this)
     }
-
+ClassName
     componentDidMount() {
         this.getUnit()
         this.getPackageType()
@@ -75,7 +77,7 @@ class FormPrduct extends Component {
                 return "Error"
                 let packages = res.data.map(item => {
                     return(
-                        <option key={"package_"+item.id_package_type} value={item.id_pakcage_type}>{item.name}</option>
+                        <option key={"package_"+item.id_package_type} value={item.id_package_type}>{item.name}</option>
                     )
                 })
                 this.setState({packages:packages})
@@ -91,18 +93,18 @@ class FormPrduct extends Component {
     }
 
     handleChangeCode(event) { this.setState({ code: event.target.value }) }
-    handleChangeName(event) { this.setState({ code: event.target.value }) }
-    handleChangeIdPackageType(event) { this.setState({ code: event.target.value }) }
-    handleChangeQuantityByPackage(event) { this.setState({ code: event.target.value }) }
-    handleChangeIdUnit(event) { this.setState({ code: event.target.value }) }
-    handleChangePrice(event) { this.setState({ code: event.target.value }) }
-    handleChangeIdProduct(event) { this.setState({ code: event.target.value }) }
+    handleChangeName(event) { this.setState({ name: event.target.value }) }
+    handleChangeIdPackageType(event) { this.setState({ idPackageType: event.target.value }) }
+    handleChangeQuantityByPackage(event) { this.setState({ quantityByPackage: event.target.value }) }
+    handleChangeIdUnit(event) { this.setState({ idUnit: event.target.value }) }
+    handleChangePrice(event) { this.setState({ price: event.target.value }) }
+    handleChangeIdProduct(event) { this.setState({ idProduct: event.target.value }) }
 
 
 
     handlePostRequest(event) {
         event.preventDefault()
-        fetch(`${ENV.API_ROUTE}get/product/add`, {
+        fetch(`${ENV.API_ROUTE}add`, {
             method: "post",
             headers: {
                 'Accept': 'application/json',
@@ -111,8 +113,8 @@ class FormPrduct extends Component {
             body: JSON.stringify({
                 id: this.state.idProduct,
                 table: "product",
-                columns: `code, name, id_package_type, quantity_by_package, id_unit, price`,
-                values: `${this.state.code}, ${this.state.name}, ${this.state.idPackageType}, ${this.state.quantityByPackage}, ${this.state.price}`
+                columns: `code, name, id_package_type, quantity_package, id_unit, price`,
+                values: `${this.state.code}, ${this.state.name}, ${this.state.idPackageType}, ${this.state.quantityByPackage}, ${this.state.idUnit}, ${this.state.price}`
             })
         })
         .then(response => {return response.json()})
@@ -124,6 +126,9 @@ class FormPrduct extends Component {
     render() {
         return (
             <div className="container">
+                <div className="col-12 text-right">
+                    <ListProduct />
+                </div>
                 <form method="post" name="produtForm">
                     <div className="row">
                         <div className="col-sd-12 col-md-6">
@@ -179,4 +184,4 @@ class FormPrduct extends Component {
     }
 }
 
-export default FormPrduct;
+export default FormProduct;
