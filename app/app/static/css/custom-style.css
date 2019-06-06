@@ -2,3 +2,40 @@ select option {
     background: #121618 !important;
     color: rgba(255, 255, 255, 0.9) !important;
 }
+
+.btn-action {
+    margin: 2px;
+}
+
+span.icon {
+    color: #000;
+}
+
+.modal-header, .modal-footer {
+    background: #121618 !important;
+    color: #fac564 !important;
+}
+
+.modal-title {
+    color: #fac564 !important;
+}
+
+.table .thead-dark th {
+    color: #fac564 !important;
+}
+
+.modal-body {
+    background: #FFFEFB !important;
+}
+
+
+
+/* .modal-title {
+    color: rgba(255, 255, 255, 0.9)
+} */
+/* .btn-action-edit {
+    background-color: #17a2b8 !important;
+}
+.btn-action-delete {
+    background-color: #17a2b8 !important;
+} */
