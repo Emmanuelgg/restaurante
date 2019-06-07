@@ -9,10 +9,10 @@ class FormProduct extends Component {
             file: "./static/images/not-found.png",
             file_name: "Sin producto",
             units: [],
-            packages: [],
+            categories: [],
             code: "",
             name: "",
-            idPackageType: "",
+            idCategory: "",
             quantityByPackage: "",
             idUnit: "",
             price: "",
@@ -21,17 +21,45 @@ class FormProduct extends Component {
         this.handleChangeFile = this.handleChangeFile.bind(this)
         this.handleChangeCode = this.handleChangeCode.bind(this)
         this.handleChangeName = this.handleChangeName.bind(this)
-        this.handleChangeIdPackageType = this.handleChangeIdPackageType.bind(this)
+        this.handleChangeCategory = this.handleChangeCategory.bind(this)
         this.handleChangeQuantityByPackage = this.handleChangeQuantityByPackage.bind(this)
         this.handleChangeIdUnit = this.handleChangeIdUnit.bind(this)
         this.handleChangePrice = this.handleChangePrice.bind(this)
         this.handleChangeIdProduct = this.handleChangeIdProduct.bind(this)
         this.handlePostRequest = this.handlePostRequest.bind(this)
+        this.getProductToEdit = this.getProductToEdit.bind(this)
+        this.resetFormProduct = this.resetFormProduct.bind(this)
     }
-ClassName
+
     componentDidMount() {
         this.getUnit()
-        this.getPackageType()
+        this.getCategory()
+    }
+
+    getProductToEdit(product) {
+        this.resetFormProduct()
+        this.setState({
+            idProduct: product.id_product,
+            code:product.code,
+            name: product.name,
+            idCategory: product.category,
+            quantityByPackage: product.quantity_package,
+            idUnit: product.id_unit,
+            price: product.price
+        })
+        console.log(product)
+    }
+
+    resetFormProduct() {
+        this.setState({
+            idProduct: "",
+            code:"",
+            name: "",
+            quantityByPackage: "",
+            idCategory: "0",
+            idUnit: "0",
+            price: ""
+        })
     }
 
     getUnit() {
@@ -59,7 +87,7 @@ ClassName
         })
     }
 
-    getPackageType() {
+    getCategory() {
         fetch(`${ENV.API_ROUTE}get`, {
             method: "post",
             cors: "cors",
@@ -68,19 +96,19 @@ ClassName
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                table: "package_type"
+                table: "category"
             })
         })
         .then(response => {return response.json()})
         .then(res => {
             if (res.status != 200)
                 return "Error"
-                let packages = res.data.map(item => {
+                let categories = res.data.map(item => {
                     return(
-                        <option key={"package_"+item.id_package_type} value={item.id_package_type}>{item.name}</option>
+                        <option key={"category_"+item.id_category} value={item.id_category}>{item.name}</option>
                     )
                 })
-                this.setState({packages:packages})
+                this.setState({categories:categories})
         })
     }
 
@@ -94,7 +122,7 @@ ClassName
 
     handleChangeCode(event) { this.setState({ code: event.target.value }) }
     handleChangeName(event) { this.setState({ name: event.target.value }) }
-    handleChangeIdPackageType(event) { this.setState({ idPackageType: event.target.value }) }
+    handleChangeCategory(event) { this.setState({ idCategory: event.target.value }) }
     handleChangeQuantityByPackage(event) { this.setState({ quantityByPackage: event.target.value }) }
     handleChangeIdUnit(event) { this.setState({ idUnit: event.target.value }) }
     handleChangePrice(event) { this.setState({ price: event.target.value }) }
@@ -113,13 +141,13 @@ ClassName
             body: JSON.stringify({
                 id: this.state.idProduct,
                 table: "product",
-                columns: `code, name, id_package_type, quantity_package, id_unit, price`,
-                values: `${this.state.code}, ${this.state.name}, ${this.state.idPackageType}, ${this.state.quantityByPackage}, ${this.state.idUnit}, ${this.state.price}`
+                columns: `code, name, id_category, quantity_package, id_unit, price`,
+                values: `${this.state.code}, ${this.state.name}, ${this.state.idCategory}, ${this.state.quantityByPackage}, ${this.state.idUnit}, ${this.state.price}`
             })
         })
         .then(response => {return response.json()})
         .then(res => {
-            //do something
+            this.resetFormProduct()
         })
     }
 
@@ -127,7 +155,8 @@ ClassName
         return (
             <div className="container">
                 <div className="col-12 text-right">
-                    <ListProduct />
+                    <button type="button" className="btn btn-primary py-1 px-3 btn-action" onClick={this.resetFormProduct}>Reiniciar</button>
+                    <ListProduct callbackFromParent={this.getProductToEdit}/>
                 </div>
                 <form method="post" name="produtForm">
                     <div className="row">
@@ -138,16 +167,16 @@ ClassName
                             <input type="text" name="name" className="form-control" placeholder="Descripción" value={this.state.name} onChange={this.handleChangeName} />
                         </div>
                         <div className="col-sd-12 col-md-6">
-                            <select name="id_package_type" className="form-control" onChange={this.handleChangeIdPackageType}>
+                            <select name="category" className="form-control" value={this.state.idCategory} onChange={this.handleChangeCategory}>
                                 <option value="0">Seleccione una opción...</option>
-                                {this.state.packages}
+                                {this.state.categories}
                             </select>
                         </div>
                         <div className="col-sd-12 col-md-6">
                             <input type="text" name="quantity_by_package" className="form-control" placeholder="Cantidad por empaque" value={this.state.quantityByPackage} onChange={this.handleChangeQuantityByPackage}/>
                         </div>
                         <div className="col-sd-12 col-md-6">
-                            <select name="id_unit" className="form-control" onChange={this.handleChangeIdUnit}>
+                            <select name="id_unit" className="form-control" value={this.state.idUnit} onChange={this.handleChangeIdUnit}>
                                 <option value="0">Seleccione una opción...</option>
                                 {this.state.units}
                             </select>
@@ -184,4 +213,4 @@ ClassName
     }
 }
 
-export default FormProduct;
+export default FormProduct

@@ -34,7 +34,7 @@ router.post('/add', (req, res) => {
             if (req.body.id == 0)
                 query = insert(table,columns,values)
             else
-                query = update(req.body.id, table, columns, value)
+                query = update(req.body.id, table, columns, values)
 
             connection.query(query, function(err, rows, fields) {
                 if (err) {
@@ -64,7 +64,7 @@ router.post('/get', (req, res) => {
             connect()
             let table = req.body.table
             let columns = req.body.columns
-            let where = req.body.where != undefined ? req.body.columns : ""
+            let where = req.body.where != undefined ? req.body.where : ""
             let query = select(table, columns, where)
             connection.query(query, function(err, rows, fields) {
                 if (err) {
@@ -87,8 +87,40 @@ router.post('/get', (req, res) => {
     }
 })
 
+router.post('/logical/delete', (req, res) => {
+    if (req.body != undefined) {
+        try {
+            connect()
+            let table = req.body.table
+            let id = req.body.id
+            let query = logicalDelete(id, table)
+            connection.query(query, function(err, rows, fields) {
+                if (err) {
+                    response.error = err
+                    response.status = 500
+                } else {
+                    response.data = rows
+                    response.status = 200
+                }
+                res.send(response)
+                res.end()
+            })
+            connection.end()
+        } catch (e) {
+            response.status = 500
+            console.log(e)
+            res.send(e)
+            res.end()
+        }
+    }
+})
+
 var select = (table, columns = "*", where) => {
-    let query = `SELECT ${columns} FROM ${table} ${where}`
+    let w = ""
+    if (where != "")
+        w = "WHERE"
+
+    let query = `SELECT ${columns} FROM ${table} ${w} ${where}`
     return query
 }
 
@@ -129,6 +161,11 @@ var update = (id, table, columns, values) => {
             data += `${columns[i]} = "${values[i]}"`
     }
     let query = `UPDATE ${table} SET ${data}  WHERE id_${table} = ${id}`
+    return query
+}
+
+var logicalDelete = (id, table) => {
+    let query = `UPDATE ${table} SET status = -1  WHERE id_${table} = ${id}`
     return query
 }
 

@@ -7,15 +7,14 @@ class ListProduct extends Component {
         this.state = {
             listProduct: []
         }
-        this.getProduct = this.getProduct.bind(this)
+        this.getProductList = this.getProductList.bind(this)
     }
 
     componentDidMount() {
 
     }
 
-    getProduct(event) {
-        event.preventDefault()
+    handleEventClickEditProduct(value) {
         fetch(`${ENV.API_ROUTE}get`, {
             method: "post",
             cors: "cors",
@@ -24,7 +23,57 @@ class ListProduct extends Component {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                table: "product"
+                table: "product",
+                where: `id_product = ${value}`
+            })
+        })
+        .then(response => {return response.json()})
+        .then(res => {
+            if (res.status != 200)
+                return "Error"
+            let data = res.data.map(item => {
+                return(
+                    item
+                )
+            })
+            this.props.callbackFromParent(data[0]);
+            $('#modalListProduct').modal('hide')
+
+        })
+    }
+    handleEventClickDeleteProduct(value) {
+        fetch(`${ENV.API_ROUTE}logical/delete`, {
+            method: "post",
+            cors: "cors",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                table: "product",
+                id: `${value}`
+            })
+        })
+        .then(response => {return response.json()})
+        .then(res => {
+            if (res.status != 200)
+                return "Error"
+            this.getProductList(this)
+        })
+    }
+
+    getProductList(event) {
+        //event.preventDefault()
+        fetch(`${ENV.API_ROUTE}get`, {
+            method: "post",
+            cors: "cors",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                table: "product",
+                where: "status = 1"
             })
         })
         .then(response => {return response.json()})
@@ -39,8 +88,12 @@ class ListProduct extends Component {
                             <td>{item.quantity_package}</td>
                             <td>{item.price}</td>
                             <td>
-                                <button className="btn btn-primary py-1 px-2 btn-action"><span className="icon icon-pencil"></span></button>
-                                <button className="btn btn-primary py-1 px-2 btn-action"><span className="icon icon-trash"></span></button>
+                                <button className="btn btn-primary py-1 px-2 btn-action" onClick={this.handleEventClickEditProduct.bind(this,item.id_product)}>
+                                    <span className="icon icon-pencil"></span>
+                                </button>
+                                <button className="btn btn-primary py-1 px-2 btn-action" onClick={this.handleEventClickDeleteProduct.bind(this,item.id_product)}>
+                                    <span className="icon icon-trash"></span>
+                                </button>
                             </td>
                         </tr>
                     )
@@ -52,7 +105,7 @@ class ListProduct extends Component {
     render() {
         return (
             <React.Fragment>
-                <button type="button" className="btn btn-primary py-1 px-3" data-toggle="modal" data-target="#modalListProduct" onClick={this.getProduct}>Listar</button>
+                <button type="button" className="btn btn-primary py-1 px-3" data-toggle="modal" data-target="#modalListProduct" onClick={this.getProductList}>Listar</button>
                 <div className="modal fade" id="modalListProduct" tabIndex="-1" role="dialog" aria-labelledby="modalListProduct" aria-hidden="true">
                     <div className="modal-dialog modal-lg" role="document">
                         <div className="modal-content">
