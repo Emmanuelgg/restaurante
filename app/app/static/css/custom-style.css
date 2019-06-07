@@ -28,7 +28,15 @@ span.icon {
     background: #FFFEFB !important;
 }
 
-
+.img-table {
+    color: #fac564 !important;
+    width: 60%;
+    height: auto;
+}
+.span-table-number {
+    font-size: 20pt;
+    color: #fac564 !important;
+}
 
 /* .modal-title {
     color: rgba(255, 255, 255, 0.9)

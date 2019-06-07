@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysqlserver:3306
--- Generation Time: Jun 07, 2019 at 02:23 AM
+-- Generation Time: Jun 07, 2019 at 03:42 PM
 -- Server version: 8.0.16
 -- PHP Version: 7.2.2
 
@@ -42,6 +42,27 @@ INSERT INTO `category` (`id_category`, `name`, `english`) VALUES
 (1, 'Comida', 'Food'),
 (2, 'Bebida', 'Drink'),
 (3, 'Postre', 'Dessert');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `dining_table`
+--
+
+CREATE TABLE `dining_table` (
+  `id_dining_table` int(11) NOT NULL,
+  `number` int(11) NOT NULL,
+  `name` varchar(32) DEFAULT NULL,
+  `status` tinyint(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `dining_table`
+--
+
+INSERT INTO `dining_table` (`id_dining_table`, `number`, `name`, `status`) VALUES
+(1, 1, 'Centro', 1),
+(2, 2, 'Esquina', 1);
 
 -- --------------------------------------------------------
 
@@ -102,6 +123,12 @@ ALTER TABLE `category`
   ADD PRIMARY KEY (`id_category`);
 
 --
+-- Indexes for table `dining_table`
+--
+ALTER TABLE `dining_table`
+  ADD PRIMARY KEY (`id_dining_table`);
+
+--
 -- Indexes for table `product`
 --
 ALTER TABLE `product`
@@ -124,6 +151,12 @@ ALTER TABLE `unit`
 --
 ALTER TABLE `category`
   MODIFY `id_category` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `dining_table`
+--
+ALTER TABLE `dining_table`
+  MODIFY `id_dining_table` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `product`
