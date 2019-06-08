@@ -1,22 +1,31 @@
 import React, {Component} from "react"
 import ENV from "../config.js"
+import ProductGrid from "./ProductGrid"
 
-class GridTable extends Component {
+class TableGrid extends Component {
     constructor(props){
         super(props)
         this.state = {
-            gridTable: []
+            tableGrid: []
         }
-        this.getGridTable = this.getGridTable.bind(this)
+        this.getTableGrid = this.getTableGrid.bind(this)
+        this.getGridProduct = this.getGridProduct.bind(this)
+        this.triggerGetProductGrid = this.triggerGetProductGrid.bind(this)
     }
 
     componentDidMount() {
-        this.getGridTable()
+        this.getTableGrid()
     }
 
+    triggerGetProductGrid(){
+        this.refs.productGrid.getProductGrid()
+    }
 
+    getGridProduct(event) {
 
-    getGridTable(event) {
+    }
+
+    getTableGrid(event) {
         //event.preventDefault()
         fetch(`${ENV.API_ROUTE}get`, {
             method: "post",
@@ -34,16 +43,16 @@ class GridTable extends Component {
         .then(res => {
             if (res.status != 200)
                 return "Error"
-                let gridTable = res.data.map(item => {
+                let tableGrid = res.data.map(item => {
                     return(
-                        <div key={"table_"+item.id_dining_table} className="col-6 col-md-4 text-center">
+                        <div key={"table_"+item.id_dining_table} className="col-6 col-md-4 text-center" onClick={this.triggerGetProductGrid}>
                             <img src={ENV.IMAGE_ROUTE+"table.svg"} className="img-table"/>
                             <br/>
                             <span className="span-table-number"><b>{item.number}</b></span>
                         </div>
                     )
                 })
-                this.setState({gridTable: gridTable})
+                this.setState({tableGrid: tableGrid})
         })
     }
 
@@ -53,13 +62,13 @@ class GridTable extends Component {
                 <br/>
                 <div className="container">
                     <div className="row">
-                        {this.state.gridTable}
+                        {this.state.tableGrid}
                     </div>
                 </div>
-
+                <ProductGrid ref="productGrid" />
             </React.Fragment>
         )
     }
 }
 
-export default GridTable;
+export default TableGrid;

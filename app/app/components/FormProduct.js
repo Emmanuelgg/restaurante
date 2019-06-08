@@ -1,6 +1,6 @@
 import React, {Component} from "react"
 import ENV from "../config.js"
-import ListProduct from "./ListProduct"
+import ProductList from "./ProductList"
 
 class FormProduct extends Component {
     constructor(props){
@@ -156,7 +156,7 @@ class FormProduct extends Component {
             <div className="container">
                 <div className="col-12 text-right">
                     <button type="button" className="btn btn-primary py-1 px-3 btn-action" onClick={this.resetFormProduct}>Reiniciar</button>
-                    <ListProduct callbackFromParent={this.getProductToEdit}/>
+                    <ProductList callbackFromParent={this.getProductToEdit}/>
                 </div>
                 <form method="post" name="produtForm">
                     <div className="row">

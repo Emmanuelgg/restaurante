@@ -1,11 +1,11 @@
 import React, {Component} from "react"
 import ENV from "../config.js"
 
-class ListProduct extends Component {
+class ProductList extends Component {
     constructor(props){
         super(props)
         this.state = {
-            listProduct: []
+            productList: []
         }
         this.getProductList = this.getProductList.bind(this)
     }
@@ -37,7 +37,7 @@ class ListProduct extends Component {
                 )
             })
             this.props.callbackFromParent(data[0]);
-            $('#modalListProduct').modal('hide')
+            $('#modalProductList').modal('hide')
 
         })
     }
@@ -80,11 +80,10 @@ class ListProduct extends Component {
         .then(res => {
             if (res.status != 200)
                 return "Error"
-                let listProduct = res.data.map(item => {
+                let productList = res.data.map(item => {
                     return(
                         <tr key={"product_"+item.id_product}>
-                            <th scope="row">{item.code}</th>
-                            <td>{item.name}</td>
+                            <td scope="row">{item.name}</td>
                             <td>{item.quantity_package}</td>
                             <td>{item.price}</td>
                             <td>
@@ -98,38 +97,44 @@ class ListProduct extends Component {
                         </tr>
                     )
                 })
-                this.setState({listProduct: listProduct})
+                this.setState({productList: productList})
         })
     }
 
     render() {
         return (
             <React.Fragment>
-                <button type="button" className="btn btn-primary py-1 px-3" data-toggle="modal" data-target="#modalListProduct" onClick={this.getProductList}>Listar</button>
-                <div className="modal fade" id="modalListProduct" tabIndex="-1" role="dialog" aria-labelledby="modalListProduct" aria-hidden="true">
+                <button type="button" className="btn btn-primary py-1 px-3" data-toggle="modal" data-target="#modalProductList" onClick={this.getProductList}>Listar</button>
+                <div className="modal fade" id="modalProductList" tabIndex="-1" role="dialog" aria-labelledby="modalProductList" aria-hidden="true">
                     <div className="modal-dialog modal-lg" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                                <h5 className="modal-title" id="exampleModalLongTitle">Productos</h5>
                                 <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                                 <div className="modal-body">
-                                    <table className="table">
-                                        <thead className="thead-dark">
-                                            <tr>
-                                                <th scope="col">Codigo</th>
-                                                <th scope="col">Nombre</th>
-                                                <th scope="col">Cantidad/empaque</th>
-                                                <th scope="col">Precio</th>
-                                                <th scope="col">Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {this.state.listProduct}
-                                        </tbody>
-                                    </table>
+                                    <div className="container">
+                                        <div className="row">
+                                            <div className="col-12">
+                                                <table className="table">
+                                                    <thead className="thead-dark">
+                                                        <tr>
+                                                            <th scope="col">Nombre</th>
+                                                            <th scope="col">Categoria</th>
+                                                            <th scope="col">Precio</th>
+                                                            <th scope="col">Acciones</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {this.state.productList}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                    </div>
                                 </div>
                             <div className="modal-footer">
                                 <button type="button" className="ml-2 btn btn-white btn-outline-white" data-dismiss="modal">Cerrar</button>
@@ -142,4 +147,4 @@ class ListProduct extends Component {
     }
 }
 
-export default ListProduct;
+export default ProductList;

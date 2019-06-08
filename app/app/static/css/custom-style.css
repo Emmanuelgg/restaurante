@@ -28,7 +28,7 @@ span.icon {
     background: #FFFEFB !important;
 }
 
-.img-table {
+.img-table, .img-product {
     color: #fac564 !important;
     width: 60%;
     height: auto;

@@ -1,7 +1,7 @@
 import React, {Component} from "react"
 import CustomHead from "../components/CustomHead"
 import NavBar from "../components/NavBar"
-import GridTable from "../components/GridTable"
+import TableGrid from "../components/TableGrid"
 
 class IndexPage extends Component {
     render() {
@@ -9,7 +9,7 @@ class IndexPage extends Component {
            <div>
                <CustomHead/>
                <NavBar active={"index"}/>
-               <GridTable />
+               <TableGrid />
            </div>
        )
     }
