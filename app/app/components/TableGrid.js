@@ -9,7 +9,6 @@ class TableGrid extends Component {
             tableGrid: []
         }
         this.getTableGrid = this.getTableGrid.bind(this)
-        this.getGridProduct = this.getGridProduct.bind(this)
         this.triggerGetProductGrid = this.triggerGetProductGrid.bind(this)
     }
 
@@ -17,12 +16,9 @@ class TableGrid extends Component {
         this.getTableGrid()
     }
 
-    triggerGetProductGrid(){
+    triggerGetProductGrid(idDiningTable){
         this.refs.productGrid.getProductGrid()
-    }
-
-    getGridProduct(event) {
-
+        this.refs.productGrid.getDiningTableOrder(idDiningTable)
     }
 
     getTableGrid(event) {
@@ -45,10 +41,12 @@ class TableGrid extends Component {
                 return "Error"
                 let tableGrid = res.data.map(item => {
                     return(
-                        <div key={"table_"+item.id_dining_table} className="col-6 col-md-4 text-center" onClick={this.triggerGetProductGrid}>
+                        <div key={"table_"+item.id_dining_table} className="col-6 col-md-4 text-center" onClick={this.triggerGetProductGrid.bind(this, item.id_dining_table)}>
                             <img src={ENV.IMAGE_ROUTE+"table.svg"} className="img-table"/>
                             <br/>
                             <span className="span-table-number"><b>{item.number}</b></span>
+                            <br/>
+                            <span className="span-table-name"><b>({item.name})</b></span>
                         </div>
                     )
                 })

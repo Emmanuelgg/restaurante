@@ -2,7 +2,7 @@ import React, {Component} from "react"
 import ENV from "../config.js"
 import ProductList from "./ProductList"
 
-class FormProduct extends Component {
+class ProductForm extends Component {
     constructor(props){
         super(props)
         this.state = {
@@ -28,7 +28,7 @@ class FormProduct extends Component {
         this.handleChangeIdProduct = this.handleChangeIdProduct.bind(this)
         this.handlePostRequest = this.handlePostRequest.bind(this)
         this.getProductToEdit = this.getProductToEdit.bind(this)
-        this.resetFormProduct = this.resetFormProduct.bind(this)
+        this.resetProductForm = this.resetProductForm.bind(this)
     }
 
     componentDidMount() {
@@ -37,7 +37,7 @@ class FormProduct extends Component {
     }
 
     getProductToEdit(product) {
-        this.resetFormProduct()
+        this.resetProductForm()
         this.setState({
             idProduct: product.id_product,
             code:product.code,
@@ -50,7 +50,7 @@ class FormProduct extends Component {
         console.log(product)
     }
 
-    resetFormProduct() {
+    resetProductForm() {
         this.setState({
             idProduct: "",
             code:"",
@@ -147,7 +147,7 @@ class FormProduct extends Component {
         })
         .then(response => {return response.json()})
         .then(res => {
-            this.resetFormProduct()
+            this.resetProductForm()
         })
     }
 
@@ -155,7 +155,7 @@ class FormProduct extends Component {
         return (
             <div className="container">
                 <div className="col-12 text-right">
-                    <button type="button" className="btn btn-primary py-1 px-3 btn-action" onClick={this.resetFormProduct}>Reiniciar</button>
+                    <button type="button" className="btn btn-primary py-1 px-3 btn-action" onClick={this.resetProductForm}>Reiniciar</button>
                     <ProductList callbackFromParent={this.getProductToEdit}/>
                 </div>
                 <form method="post" name="produtForm">
@@ -213,4 +213,4 @@ class FormProduct extends Component {
     }
 }
 
-export default FormProduct
+export default ProductForm

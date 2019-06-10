@@ -38,6 +38,25 @@ span.icon {
     color: #fac564 !important;
 }
 
+.span-table-name {
+    font-size: 12pt;
+    color: #808080 !important;
+}
+
+.modal-xl {
+    width: 90% !important;
+    max-width: 90% !important;
+}
+
+.product-grid {
+    background: #121618 !important;
+}
+
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+    background: #fac564 !important;fac564
+    color: #121618 !important;
+}
+
 /* .modal-title {
     color: rgba(255, 255, 255, 0.9)
 } */
