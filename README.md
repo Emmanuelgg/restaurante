@@ -16,8 +16,10 @@ npm install express --save
 npm install nodemon --save-dev  
 npm install mysql --save  
 npm install --save next react react-dom  
-  
+npm install multer --save  
+
 Compose App
 npm install next --save  
 npm install react --save  
 npm install react-dom --save  
+npm install react-data-table-component styled-components --save 

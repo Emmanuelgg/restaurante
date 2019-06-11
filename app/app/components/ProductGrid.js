@@ -1,4 +1,5 @@
 import React, {Component} from "react"
+import DataTable from 'react-data-table-component';
 import ENV from "../config.js"
 
 class ProductGrid extends Component {
@@ -7,13 +8,55 @@ class ProductGrid extends Component {
         this.state = {
             productGrid: [],
             foodOrder: {},
-            foodOrderDesciption: {}
+            foodOrderDesciption: [],
+            columns: [
+              {
+                name: 'Nombre',
+                selector: 'name',
+                sortable: true
+              },
+              {
+                name: 'Cantidad',
+                selector: 'quantity',
+                sortable: true,
+              },
+              {
+                name: 'Unitario',
+                selector: 'unit',
+                sortable: true,
+              },
+              {
+                name: 'Importe',
+                selector: 'import',
+                sortable: true,
+              },
+              {
+                name: 'Acciones',
+                selector: 'actions',
+                ignoreRowClick: true,
+                cell: row => {
+                    return(
+                        <div>
+                            <button className="btn btn-primary py-1 px-2 btn-action" onClick={this.handleEventClickDeleteFoodOrderDescription.bind(this,row.actions)}>
+                                <span className="icon icon-trash"></span>
+                            </button>
+                        </div>
+                    )
+                }
+
+              },
+            ]
         }
         this.getProductGrid = this.getProductGrid.bind(this)
         this.getDiningTableOrder = this.getDiningTableOrder.bind(this)
+        this.handleEventClickDeleteFoodOrderDescription = this.handleEventClickDeleteFoodOrderDescription.bind(this)
     }
 
     componentDidMount() {
+
+    }
+
+    handleEventClickDeleteFoodOrderDescription() {
 
     }
 
@@ -60,8 +103,8 @@ class ProductGrid extends Component {
                 return "Error"
                 let productGrid = res.data.map(item => {
                     return(
-                        <div key={"product_"+item.id_product} className="col-sm-6 col-md-4 text-center">
-                            <img src={ENV.IMAGE_ROUTE+"table.svg"} className="img-product"/>
+                        <div key={"product_"+item.id_product} className="col-6 col-sm-6 col-md-4 text-center container-grid">
+                            <img src={ENV.API_FILES_ROUTE+item.image_url} className="rounded img-product"/>
                             <br/>
                             <span className="span-table-number"><b>{item.name}</b></span>
                         </div>
@@ -89,18 +132,14 @@ class ProductGrid extends Component {
                             <div className="modal-body">
                                 <div className="row">
                                     <div className="col-12 col-md-4">
-                                        <table className="table">
-                                            <thead className="thead-dark">
-                                                <tr>
-                                                    <th>Nombre</th>
-                                                    <th>Cantidad</th>
-                                                    <th className="d-none d-sm-block">Unitario</th>
-                                                    <th>Importe</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            </tbody>
-                                        </table>
+                                        <DataTable
+                                            noHeader={true}
+                                            pagination={true}
+                                            columns={this.state.columns}
+                                            data={this.state.foodOrderDesciption}
+                                            className="table"
+                                            noDataComponent="No se encontraron productos"
+                                        />
                                     </div>
                                     <div className="product-grid col-12 col-md-8">
                                         <div className="row">

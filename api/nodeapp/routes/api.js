@@ -1,7 +1,17 @@
 const express = require('express')
 const router = express.Router()
 const app = express()
-var mysql = require("mysql")
+const multer = require('multer')
+const mysql = require("mysql")
+
+const storage = multer.diskStorage({
+    destination: './public/files/',
+    filename(req, file, cb) {
+        cb(null, `${file.originalname}`)
+    },
+})
+
+const upload = multer({ storage })
 
 var connection = null
 
@@ -16,6 +26,18 @@ var connect = () => {
     })
     connection.connect()
 }
+
+router.post('/file/upload', upload.single('file'), (req, res) => {
+    const file = req.body.file; // file passed from client
+    let response = {
+        status: 200,
+        data: file,
+        error: null
+    }
+    res.send(response)
+    res.end()
+
+});
 
 router.post('/add', (req, res) => {
     let response = {

@@ -24,14 +24,31 @@ span.icon {
     color: #fac564 !important;
 }
 
+.rdt_TableHead .rdt_TableCol, .rdt_TableFooter, .rdt_TableFooter * {
+    background: #121618 !important;
+    color: #fac564 !important;
+
+}
+
+.rdt_TableFooter svg {
+    background: #121618 !important;
+    color: #fac564 !important;
+    fill: #fac564 !important;
+
+}
+
 .modal-body {
     background: #FFFEFB !important;
 }
 
-.img-table, .img-product {
+.img-table {
     color: #fac564 !important;
     width: 60%;
     height: auto;
+}
+.img-product {
+    width: 150px;
+    height: 150px;
 }
 .span-table-number {
     font-size: 20pt;
@@ -55,6 +72,10 @@ span.icon {
 .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
     background: #fac564 !important;fac564
     color: #121618 !important;
+}
+
+.container-grid {
+    padding: 10px;
 }
 
 /* .modal-title {

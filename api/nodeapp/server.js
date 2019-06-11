@@ -31,7 +31,8 @@ app.use(bodyParser.urlencoded({
   extended: false
 }))
 
-app.use(express.static(environmentRoot + '/public'));
+app.use(express.static(environmentRoot + '/public'))
+app.use('/public', express.static('public'))
 
 app.use('/api', api)
 

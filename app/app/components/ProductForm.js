@@ -1,13 +1,15 @@
 import React, {Component} from "react"
 import ENV from "../config.js"
 import ProductList from "./ProductList"
+import * as FileUpload from "../utils/FileUpload"
 
 class ProductForm extends Component {
     constructor(props){
         super(props)
         this.state = {
-            file: "./static/images/not-found.png",
-            file_name: "Sin producto",
+            file: null,
+            file_url: `${ENV.IMAGE_ROUTE}not-found.png`,
+            file_name: "Sin imagen",
             units: [],
             categories: [],
             code: "",
@@ -38,14 +40,24 @@ class ProductForm extends Component {
 
     getProductToEdit(product) {
         this.resetProductForm()
+        let file_url = `${ENV.IMAGE_ROUTE}not-found.png`
+        let file_name = "Sin imagen"
+        if (product.image_url != "" && product.image_url != null) {
+            file_url = ENV.API_FILES_ROUTE+product.image_url
+            file_name = product.image_url
+        }
+
         this.setState({
             idProduct: product.id_product,
             code:product.code,
             name: product.name,
-            idCategory: product.category,
+            idCategory: product.id_category,
             quantityByPackage: product.quantity_package,
             idUnit: product.id_unit,
-            price: product.price
+            price: product.price,
+            file: null,
+            file_url: file_url,
+            file_name: file_name
         })
         console.log(product)
     }
@@ -58,7 +70,10 @@ class ProductForm extends Component {
             quantityByPackage: "",
             idCategory: "0",
             idUnit: "0",
-            price: ""
+            price: "",
+            file: null,
+            file_url: `${ENV.IMAGE_ROUTE}not-found.png`,
+            file_name: "Sin imagen"
         })
     }
 
@@ -115,7 +130,8 @@ class ProductForm extends Component {
     handleChangeFile(event) {
         event.preventDefault()
         this.setState({
-            file: URL.createObjectURL(event.target.files[0]),
+            file_url: URL.createObjectURL(event.target.files[0]),
+            file: event.target.files[0],
             file_name: event.target.files[0].name
         })
     }
@@ -141,12 +157,16 @@ class ProductForm extends Component {
             body: JSON.stringify({
                 id: this.state.idProduct,
                 table: "product",
-                columns: `code, name, id_category, quantity_package, id_unit, price`,
-                values: `${this.state.code}, ${this.state.name}, ${this.state.idCategory}, ${this.state.quantityByPackage}, ${this.state.idUnit}, ${this.state.price}`
+                columns: `code, name, id_category, quantity_package, id_unit, price, image_url`,
+                values: `${this.state.code},${this.state.name},${this.state.idCategory},${this.state.quantityByPackage},${this.state.idUnit},${this.state.price},${this.state.file_name}`
             })
         })
         .then(response => {return response.json()})
         .then(res => {
+            let file = this.state.file
+            let file_name = this.state.file_name
+            if (file != null)
+                FileUpload.uploadDocumentRequest(file)
             this.resetProductForm()
         })
     }
@@ -188,7 +208,7 @@ class ProductForm extends Component {
                     <br/>
                     <div className="row">
                         <div className="col-12 text-center">
-                            <img style={{ width: "200px", height:"200px" }} src={this.state.file} className="rounded" alt="product images"/>
+                            <img style={{ width: "200px", height:"200px" }} src={this.state.file_url} className="rounded" alt="product images"/>
                         </div>
                     </div>
                     <br/>

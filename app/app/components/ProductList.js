@@ -1,11 +1,49 @@
 import React, {Component} from "react"
+import DataTable from 'react-data-table-component';
+
 import ENV from "../config.js"
+
 
 class ProductList extends Component {
     constructor(props){
         super(props)
         this.state = {
-            productList: []
+            productList: [],
+            columns: [
+              {
+                name: 'Nombre',
+                selector: 'name',
+                sortable: true,
+              },
+              {
+                name: 'Categoria',
+                selector: 'category',
+                sortable: true
+              },
+              {
+                name: 'Precio',
+                selector: 'price',
+                sortable: true
+              },
+              {
+                name: 'Acciones',
+                selector: 'actions',
+                ignoreRowClick: true,
+                cell: row => {
+                    return(
+                        <div>
+                            <button className="btn btn-primary py-1 px-2 btn-action" onClick={this.handleEventClickEditProduct.bind(this,row.actions)}>
+                                <span className="icon icon-pencil"></span>
+                            </button>
+                            <button className="btn btn-primary py-1 px-2 btn-action" onClick={this.handleEventClickDeleteProduct.bind(this,row.actions)}>
+                                <span className="icon icon-trash"></span>
+                            </button>
+                        </div>
+                    )
+                }
+
+              },
+            ]
         }
         this.getProductList = this.getProductList.bind(this)
     }
@@ -81,21 +119,12 @@ class ProductList extends Component {
             if (res.status != 200)
                 return "Error"
                 let productList = res.data.map(item => {
-                    return(
-                        <tr key={"product_"+item.id_product}>
-                            <td scope="row">{item.name}</td>
-                            <td>{item.quantity_package}</td>
-                            <td>{item.price}</td>
-                            <td>
-                                <button className="btn btn-primary py-1 px-2 btn-action" onClick={this.handleEventClickEditProduct.bind(this,item.id_product)}>
-                                    <span className="icon icon-pencil"></span>
-                                </button>
-                                <button className="btn btn-primary py-1 px-2 btn-action" onClick={this.handleEventClickDeleteProduct.bind(this,item.id_product)}>
-                                    <span className="icon icon-trash"></span>
-                                </button>
-                            </td>
-                        </tr>
-                    )
+                    return({
+                        name:item.name,
+                        category:item.quantity_package,
+                        price:item.price,
+                        actions: item.id_product
+                    })
                 })
                 this.setState({productList: productList})
         })
@@ -118,19 +147,14 @@ class ProductList extends Component {
                                     <div className="container">
                                         <div className="row">
                                             <div className="col-12">
-                                                <table className="table">
-                                                    <thead className="thead-dark">
-                                                        <tr>
-                                                            <th scope="col">Nombre</th>
-                                                            <th scope="col">Categoria</th>
-                                                            <th scope="col">Precio</th>
-                                                            <th scope="col">Acciones</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {this.state.productList}
-                                                    </tbody>
-                                                </table>
+                                                <DataTable
+                                                    noHeader={true}
+                                                    pagination={true}
+                                                    columns={this.state.columns}
+                                                    data={this.state.productList}
+                                                    className="table"
+                                                    noDataComponent="No se encontraron productos"
+                                                />
                                             </div>
                                         </div>
 

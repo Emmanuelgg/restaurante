@@ -41,7 +41,7 @@ class TableGrid extends Component {
                 return "Error"
                 let tableGrid = res.data.map(item => {
                     return(
-                        <div key={"table_"+item.id_dining_table} className="col-6 col-md-4 text-center" onClick={this.triggerGetProductGrid.bind(this, item.id_dining_table)}>
+                        <div key={"table_"+item.id_dining_table} className="col-6 col-md-4 text-center container-grid" onClick={this.triggerGetProductGrid.bind(this, item.id_dining_table)}>
                             <img src={ENV.IMAGE_ROUTE+"table.svg"} className="img-table"/>
                             <br/>
                             <span className="span-table-number"><b>{item.number}</b></span>

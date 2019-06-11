@@ -1,11 +1,42 @@
 import React, {Component} from "react"
+import DataTable from 'react-data-table-component'
 import ENV from "../config.js"
 
 class DiningTableList extends Component {
     constructor(props){
         super(props)
         this.state = {
-            diningTableList: []
+            diningTableList: [],
+            columns: [
+              {
+                name: 'Numero',
+                selector: 'number',
+                sortable: true
+              },
+              {
+                name: 'Nombre',
+                selector: 'name',
+                sortable: true,
+              },
+              {
+                name: 'Acciones',
+                selector: 'actions',
+                ignoreRowClick: true,
+                cell: row => {
+                    return(
+                        <div>
+                            <button className="btn btn-primary py-1 px-2 btn-action" onClick={this.handleEventClickEditDiningTable.bind(this,row.actions)}>
+                                <span className="icon icon-pencil"></span>
+                            </button>
+                            <button className="btn btn-primary py-1 px-2 btn-action" onClick={this.handleEventClickDeleteDiningTable.bind(this,row.actions)}>
+                                <span className="icon icon-trash"></span>
+                            </button>
+                        </div>
+                    )
+                }
+
+              },
+            ]
         }
         this.getDiningTableList = this.getDiningTableList.bind(this)
     }
@@ -81,20 +112,11 @@ class DiningTableList extends Component {
             if (res.status != 200)
                 return "Error"
                 let diningTableList = res.data.map(item => {
-                    return(
-                        <tr key={"dining_table_"+item.id_dining_table}>
-                            <td>{item.number}</td>
-                            <td>{item.name}</td>
-                            <td>
-                                <button className="btn btn-primary py-1 px-2 btn-action" onClick={this.handleEventClickEditDiningTable.bind(this,item.id_dining_table)}>
-                                    <span className="icon icon-pencil"></span>
-                                </button>
-                                <button className="btn btn-primary py-1 px-2 btn-action" onClick={this.handleEventClickDeleteDiningTable.bind(this,item.id_dining_table)}>
-                                    <span className="icon icon-trash"></span>
-                                </button>
-                            </td>
-                        </tr>
-                    )
+                    return({
+                        number: item.number,
+                        name: item.name,
+                        actions: item.id_dining_table
+                    })
                 })
                 this.setState({diningTableList: diningTableList})
         })
@@ -117,18 +139,14 @@ class DiningTableList extends Component {
                                     <div className="container">
                                         <div className="row">
                                             <div className="col-12">
-                                                <table className="table">
-                                                    <thead className="thead-dark">
-                                                        <tr>
-                                                            <th scope="col">Numero</th>
-                                                            <th scope="col">Nombre</th>
-                                                            <th scope="col">Acciones</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {this.state.diningTableList}
-                                                    </tbody>
-                                                </table>
+                                                <DataTable
+                                                    noHeader={true}
+                                                    pagination={true}
+                                                    columns={this.state.columns}
+                                                    data={this.state.diningTableList}
+                                                    className="table"
+                                                    noDataComponent="No se encontraron mesas"
+                                                />
                                             </div>
                                         </div>
 

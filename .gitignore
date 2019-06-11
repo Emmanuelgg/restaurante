@@ -6,6 +6,9 @@ api/db_rest/
 api/nodeapp/node_modules/*
 api/conf/
 
+!api/nodeapp/public/files/.gitkeep
+api/nodeapp/public/files/*
+
 !app/app/node_modules/.gitkeep
 app/app/node_modules/*
 app/app/.next/
