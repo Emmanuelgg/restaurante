@@ -37,6 +37,9 @@ class ProductGrid extends Component {
                 cell: row => {
                     return(
                         <div>
+                            <button className="btn btn-primary py-1 px-2 btn-action" onClick={this.handleEventClickMinusFoodOrderDescription.bind(this,row.actions)}>
+                                <span className="icon icon-minus"></span>
+                            </button>
                             <button className="btn btn-primary py-1 px-2 btn-action" onClick={this.handleEventClickDeleteFoodOrderDescription.bind(this,row.actions)}>
                                 <span className="icon icon-trash"></span>
                             </button>
@@ -50,18 +53,76 @@ class ProductGrid extends Component {
         this.getProductGrid = this.getProductGrid.bind(this)
         this.getDiningTableOrder = this.getDiningTableOrder.bind(this)
         this.getFoodOrderDescription = this.getFoodOrderDescription.bind(this)
-        this.handleEventClickDeleteFoodOrderDescription = this.handleEventClickDeleteFoodOrderDescription.bind(this)
     }
 
     componentDidMount() {
 
     }
 
-    handleEventClickDeleteFoodOrderDescription() {
+    handleEventClickMinusFoodOrderDescription(id) {
+        let foodOrderDesciption = this.state.foodOrderDesciption.find(
+            item => {
+                return item.actions == id
+            }
+        )
+        if (foodOrderDesciption.quantity <= 0) {
+            this.handleEventClickDeleteFoodOrderDescription(id)
+            return
+        }
+        let newQuantity = foodOrderDesciption.quantity-1
+        let newTotal = newQuantity*foodOrderDesciption.unit
+        fetch(`${ENV.API_ROUTE}update`, {
+            method: "post",
+            cors: "cors",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                table: "food_order_description",
+                id: id,
+                columns: "quantity, total",
+                values: `${newQuantity},${newTotal}`
+            })
+        })
+        .then(response => {return response.json()})
+        .then(res => {
+            if (res.status != 200)
+                return "Error"
+            this.getFoodOrderDescription()
+        })
+    }
 
+    handleEventClickDeleteFoodOrderDescription(id) {
+        fetch(`${ENV.API_ROUTE}delete`, {
+            method: "post",
+            cors: "cors",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                table: "food_order_description",
+                id: id
+            })
+        })
+        .then(response => {return response.json()})
+        .then(res => {
+            if (res.status != 200)
+                return "Error"
+            this.getFoodOrderDescription()
+        })
+    }
+
+    resetFoodOrder() {
+        this.setState({
+            foodOrder: {},
+            foodOrderDesciption: []
+        })
     }
 
     getFoodOrderDescription() {
+        this.state.foodOrder.total = 0
         fetch(`${ENV.API_ROUTE}get`, {
             method: "post",
             cors: "cors",
@@ -80,6 +141,7 @@ class ProductGrid extends Component {
                 return "Error"
             let foodOrderDesciption = res.data.map(
                 item => {
+                    this.state.foodOrder.total += item.total
                     return({
                         name: item.product_name,
                         quantity: item.quantity,
@@ -95,6 +157,7 @@ class ProductGrid extends Component {
 
     getDiningTableOrder(idDiningTable) {
         //event.preventDefault()
+        this.resetFoodOrder()
         fetch(`${ENV.API_ROUTE}get/foodOrder`, {
             method: "post",
             cors: "cors",
@@ -176,9 +239,18 @@ class ProductGrid extends Component {
                     <div className="modal-dialog modal-xl" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLongTitle">
-                                    Mesa {this.state.foodOrder.number}, Orden: #{this.state.foodOrder.id_food_order}
-                                </h5>
+                                <div className="col-6 col-md-3">
+                                    <h5 className="modal-title" id="exampleModalLongTitle">
+                                        Mesa {this.state.foodOrder.number}, Orden: #{this.state.foodOrder.id_food_order}
+                                    </h5>
+                                </div>
+                                <div className="col-5 col-md-3">
+                                    <h5 className="modal-title text-right" id="exampleModalLongTitle">
+                                        <b>Total: ${this.state.foodOrder.total}</b>
+                                    </h5>
+                                </div>
+
+
                                 <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>

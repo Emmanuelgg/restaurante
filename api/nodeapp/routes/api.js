@@ -29,8 +29,15 @@ var connect = () => {
 
 
 class Database {
-    constructor( config ) {
-        this.connection = mysql.createConnection( config );
+    constructor( ) {
+        this.connection = mysql.createPool( {
+          host     : 'mysqlserver',
+          user     : 'root',
+          password : '123456',
+          database : "db_rest",
+          port     : "3306",
+          multipleStatements: true
+        } )
     }
     query( sql, args ) {
         return new Promise( ( resolve, reject ) => {
@@ -51,30 +58,6 @@ class Database {
         } );
     }
 }
-
-let database = new Database(mysql.createConnection({
-  host     : 'mysqlserver',
-  user     : 'root',
-  password : '123456',
-  database : "db_rest",
-  port     : "3306",
-  multipleStatements: true
-}))
-
-/* Exaple mysql query
-database.query( 'SELECT * FROM some_table' )
-    .then( rows => {
-        someRows = rows;
-        return database.query( 'SELECT * FROM other_table' );
-    } )
-    .then( rows => {
-        otherRows = rows;
-        return database.close();
-    } )
-    .then( () => {
-        // do something with someRows and otherRows
-    } );
-*/
 
 router.post('/file/upload', upload.single('file'), (req, res) => {
     const file = req.body.file; // file passed from client
@@ -164,7 +147,7 @@ router.post('/get', (req, res) => {
     }
 })
 
-router.post('/get/foodOrder', (req, res) => {
+router.post("/get/foodOrder", (req, res) =>{
     if (req.body != undefined) {
         try {
             let response = {
@@ -172,41 +155,49 @@ router.post('/get/foodOrder', (req, res) => {
                 data: {},
                 error: null
             }
-            connect()
             let id = req.body.id
             let query = select("food_order", "*", `id_dining_table = ${id} AND status = 1`)
-            connection.query(query, function(err, rows, fields) {
-                if (err) {
-                    response.error = err
-                    response.status = 500
-                } else {
-                    if (rows.length <= 0) {
+            let database = new Database()
+            database.query(query)
+                .then( rows => {
+                    if (rows.lenght <= 0) {
                         query = insert(
                             "food_order",
                             "id_dining_table, id_food_order_type, total, status, created_at, updated_at",
                             `${id}, 1, 0.00, 1, ${getDateTime()}, ${getDateTime()}`
                         )
-                        connection.query(query, function(err, rows, fields) {
-                            if (err) {
-                                response.error = err
-                                response.status = 500
-                            } else {
-                                getDiningTableAndFoodOrder(req, res, id)
-                            }
-                        })
-
-                    } else {
-                        getDiningTableAndFoodOrder(req, res, id)
+                        return database.query(query);
                     }
-                }
-            })
-            //connection.end()
+                } )
+                .then( rows => {
+                    query = `
+                    SELECT fo.id_food_order, fo.id_dining_table, fo.total, fo.created_at, dt.number, dt.name FROM food_order fo
+                    LEFT JOIN dining_table dt ON dt.id_dining_table = fo.id_dining_table
+                    WHERE dt.id_dining_table = ${id} AND fo.status = 1
+                    `
+                    return database.query(query)
+                } )
+                .then( rows => {
+                    response.data.food_order = rows
+                    query = `
+                        SELECT fod.*, p.name FROM food_order_description fod
+                        INNER JOIN product p ON fod.id_product = p.id_product
+                        WHERE fod.id_food_order = ${rows[0].id_food_order}
+                    `
+                    return database.query(query)
+                } )
+                .then( rows => {
+                    response.data.food_order_description = rows
+                    response.status = 200
+                    res.send(response)
+                    res.end()
+                    return database.close()
+                } )
+
         } catch (e) {
-            response.status = 500
-            console.log(e)
-            res.send(e)
-            res.end()
+
         }
+
     }
 })
 
@@ -305,45 +296,78 @@ router.post('/add/foodOrder', (req, res) => {
     }
 })
 
-var getDiningTableAndFoodOrder = (req, res, id) => {
+router.post('/delete', (req, res) => {
     let response = {
         status: 200,
         data: {},
         error: null
     }
-    query = `
-    SELECT fo.id_food_order, fo.id_dining_table, fo.total, fo.created_at, dt.number, dt.name FROM food_order fo
-    LEFT JOIN dining_table dt ON dt.id_dining_table = fo.id_dining_table
-    WHERE dt.id_dining_table = ${id} AND fo.status = 1
-    `
-    connection.query(query, function(err, rows, fields) {
-        if (err) {
-            response.error = err
-            response.status = 500
-        }  else {
-            response.data.food_order = rows
-            query = `
-                SELECT fod.*, p.name FROM food_order_description fod
-                INNER JOIN product p ON fod.id_product = p.id_product
-                WHERE fod.id_food_order = ${rows[0].id_food_order}
-            `
+    if (req.body != undefined) {
+        try {
             connect()
+            let table = req.body.table
+            let id = req.body.id
+            let query = permanentDelete(id, table)
             connection.query(query, function(err, rows, fields) {
                 if (err) {
                     response.error = err
                     response.status = 500
-                }  else {
-                    response.data.food_order_description = rows
+                } else {
+                    response.data = rows
                     response.status = 200
                 }
                 res.send(response)
                 res.end()
             })
             connection.end()
+        } catch (e) {
+            response.status = 500
+            console.log(e)
+            res.send(e)
+            res.end()
         }
-    })
-    connection.end()
-}
+    }
+})
+
+router.post('/update', (req, res) => {
+    let response = {
+        status: 200,
+        data: {},
+        error: null
+    }
+    if (req.body != undefined) {
+        try {
+            connect()
+            let table = req.body.table
+            let id = req.body.id
+            let columns = req.body.columns
+            let values = req.body.values
+            let query = update(
+                id,
+                table,
+                `${columns}`,
+                `${values}`
+            )
+            connection.query(query, function(err, rows, fields) {
+                if (err) {
+                    response.error = err
+                    response.status = 500
+                } else {
+                    response.data = rows
+                    response.status = 200
+                }
+                res.send(response)
+                res.end()
+            })
+            connection.end()
+        } catch (e) {
+            response.status = 500
+            console.log(e)
+            res.send(e)
+            res.end()
+        }
+    }
+})
 
 router.post('/logical/delete', (req, res) => {
     let response = {
@@ -429,6 +453,11 @@ var update = (id, table, columns, values) => {
 
 var logicalDelete = (id, table) => {
     let query = `UPDATE ${table} SET status = -1  WHERE id_${table} = ${id}`
+    return query
+}
+
+var permanentDelete = (id, table) => {
+    let query = `DELETE FROM ${table} WHERE id_${table} = ${id}`
     return query
 }
 
