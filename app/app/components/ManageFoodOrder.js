@@ -2,7 +2,7 @@ import React, {Component} from "react"
 import DataTable from 'react-data-table-component';
 import ENV from "../config.js"
 
-class ProductGrid extends Component {
+class ManageFoodOrder extends Component {
     constructor(props){
         super(props)
         this.state = {
@@ -37,7 +37,7 @@ class ProductGrid extends Component {
                 cell: row => {
                     return(
                         <div>
-                            <button className="btn btn-primary py-1 px-2 btn-action" onClick={this.handleEventClickMinusFoodOrderDescription.bind(this,row.actions)}>
+                            <button className="btn btn-primary py-1 px-2 btn-action" onClick={this.handleEventClickSubtractFoodOrderDescription.bind(this,row.actions)}>
                                 <span className="icon icon-minus"></span>
                             </button>
                             <button className="btn btn-primary py-1 px-2 btn-action" onClick={this.handleEventClickDeleteFoodOrderDescription.bind(this,row.actions)}>
@@ -59,7 +59,7 @@ class ProductGrid extends Component {
 
     }
 
-    handleEventClickMinusFoodOrderDescription(id) {
+    handleEventClickSubtractFoodOrderDescription(id) {
         let foodOrderDesciption = this.state.foodOrderDesciption.find(
             item => {
                 return item.actions == id
@@ -235,7 +235,7 @@ class ProductGrid extends Component {
     render() {
         return (
             <React.Fragment>
-                <div className="modal fade" id="modalProductGrid" tabIndex="-1" role="dialog" aria-labelledby="modalProductGrid" aria-hidden="true">
+                <div className="modal fade" id="modalManageFoodOrder" tabIndex="-1" role="dialog" aria-labelledby="modalManageFoodOrder" aria-hidden="true">
                     <div className="modal-dialog modal-xl" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
@@ -286,4 +286,4 @@ class ProductGrid extends Component {
     }
 }
 
-export default ProductGrid;
+export default ManageFoodOrder;

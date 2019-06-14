@@ -1,6 +1,6 @@
 import React, {Component} from "react"
 import ENV from "../config.js"
-import ProductGrid from "./ProductGrid"
+import ManageFoodOrder from "./ManageFoodOrder"
 
 class TableGrid extends Component {
     constructor(props){
@@ -9,14 +9,14 @@ class TableGrid extends Component {
             tableGrid: []
         }
         this.getTableGrid = this.getTableGrid.bind(this)
-        this.triggerGetProductGrid = this.triggerGetProductGrid.bind(this)
+        this.triggerGetManageFoodOrder = this.triggerGetManageFoodOrder.bind(this)
     }
 
     componentDidMount() {
         this.getTableGrid()
     }
 
-    triggerGetProductGrid(idDiningTable){
+    triggerGetManageFoodOrder(idDiningTable){
         this.refs.productGrid.getProductGrid()
         this.refs.productGrid.getDiningTableOrder(idDiningTable)
     }
@@ -41,7 +41,7 @@ class TableGrid extends Component {
                 return "Error"
                 let tableGrid = res.data.map(item => {
                     return(
-                        <div key={"table_"+item.id_dining_table} className="col-6 col-md-4 text-center container-grid" onClick={this.triggerGetProductGrid.bind(this, item.id_dining_table)}>
+                        <div key={"table_"+item.id_dining_table} className="col-6 col-md-4 text-center container-grid" onClick={this.triggerGetManageFoodOrder.bind(this, item.id_dining_table)}>
                             <img src={ENV.IMAGE_ROUTE+"table.svg"} className="img-table"/>
                             <br/>
                             <span className="span-table-number"><b>{item.number}</b></span>
@@ -63,7 +63,7 @@ class TableGrid extends Component {
                         {this.state.tableGrid}
                     </div>
                 </div>
-                <ProductGrid ref="productGrid" />
+                <ManageFoodOrder ref="productGrid" />
             </React.Fragment>
         )
     }
