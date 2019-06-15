@@ -59,7 +59,7 @@ class ManageFoodOrder extends Component {
 
     }
 
-    handleEventClickSubtractFoodOrderDescription(id) {
+    handleEventClickSubtractFoodOrderDescription(values) {
         let foodOrderDesciption = this.state.foodOrderDesciption.find(
             item => {
                 return item.actions == id
@@ -132,7 +132,9 @@ class ManageFoodOrder extends Component {
             },
             body: JSON.stringify({
                 table: "food_order_description",
-                where: `id_food_order = ${this.state.foodOrder.id_food_order}`
+                columns: "id_product, product_name, SUM(quantity) quantity, price, SUM(total) total",
+                where: `id_food_order = ${this.state.foodOrder.id_food_order}`,
+                groupBy: "id_product, product_name, price"
             })
         })
         .then(response => {return response.json()})
@@ -147,7 +149,7 @@ class ManageFoodOrder extends Component {
                         quantity: item.quantity,
                         unit: item.price,
                         import: item.total,
-                        actions: item.id_food_order_description
+                        actions: {idFoodOrder:this.state.foodOrder.id_food_order, idProduct: item.id_product}
                     })
                 }
             )
@@ -220,7 +222,7 @@ class ManageFoodOrder extends Component {
                 return "Error"
                 let productGrid = res.data.map(item => {
                     return(
-                        <div key={"product_"+item.id_product} className="col-6 col-sm-6 col-md-4 text-center container-grid" onClick={this.addProductToFoodOrder.bind(this, item.id_product)}>
+                        <div key={"product_"+item.id_product} className="col-12 col-sm-6 col-md-4 text-center container-grid" onClick={this.addProductToFoodOrder.bind(this, item.id_product)}>
                             <img src={ENV.API_FILES_ROUTE+item.image_url} className="rounded img-product"/>
                             <br/>
                             <span className="span-table-number"><b>{item.name}</b></span>
@@ -228,7 +230,7 @@ class ManageFoodOrder extends Component {
                     )
                 })
                 this.setState({productGrid: productGrid})
-                $("#modalProductGrid").modal("show")
+                $("#modalManageFoodOrder").modal("show")
         })
     }
 

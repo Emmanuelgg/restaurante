@@ -125,7 +125,8 @@ router.post('/get', (req, res) => {
             let columns = req.body.columns
             let where = req.body.where != undefined ? req.body.where : ""
             let join = req.body.join != undefined ? req.body.join : ""
-            let query = select(table, columns, where, join)
+            let groupBy = req.body.groupBy != undefined ? req.body.groupBy : ""
+            let query = select(table, columns, where, join, groupBy)
             connection.query(query, function(err, rows, fields) {
                 if (err) {
                     response.error = err
@@ -160,7 +161,7 @@ router.post("/get/foodOrder", (req, res) =>{
             let database = new Database()
             database.query(query)
                 .then( rows => {
-                    if (rows.lenght <= 0) {
+                    if (rows.lenght <= 0 || Object.keys(rows).length <= 0) {
                         query = insert(
                             "food_order",
                             "id_dining_table, id_food_order_type, total, status, created_at, updated_at",
@@ -168,6 +169,7 @@ router.post("/get/foodOrder", (req, res) =>{
                         )
                         return database.query(query);
                     }
+
                 } )
                 .then( rows => {
                     query = `
@@ -203,90 +205,38 @@ router.post("/get/foodOrder", (req, res) =>{
 
 router.post('/add/foodOrder', (req, res) => {
     if (req.body != undefined) {
+        let response = {
+            status: 200,
+            data: {},
+            error: null
+        }
         try {
-            let response = {
-                status: 200,
-                data: {},
-                error: null
-            }
-            connect()
-            let id = req.body.id
+            let database = new Database()
+            let idFoodOrder = req.body.id
             let idProduct = req.body.id_product
-            let query = `
-                SELECT fod.id_food_order_description id_food_order_description, p.name product_name, fod.quantity quantity, p.price price
-                FROM food_order fo
-                INNER JOIN food_order_description fod ON fod.id_food_order = fo.id_food_order
-                INNER JOIN product p ON p.id_product = fod.id_product
-                WHERE fo.id_food_order = ${id} AND fod.id_product = ${idProduct}
-            `
-            connection.query(query, function(err, rows, fields) {
-                if (err) {
-                    response.error = err
-                    response.status = 500
-                } else {
-                    rows = JSON.stringify(rows)
-                    rows = JSON.parse(rows)
+            query = select(
+                 "product",
+                 "*",
+                 `id_product = ${idProduct}`
+             )
+            database.query(query)
+                .then( rows => {
                     if (rows[0] != undefined) {
-                        let quantity = rows[0].quantity + 1
-                        let price = rows[0].price
-                        let total = quantity * price
-                        query = update(
-                            rows[0].id_food_order_description,
+                        query = insert(
                             "food_order_description",
-                            "quantity, product_name, price, total",
-                            `${quantity},${rows[0].product_name},${price},${total}`
+                            "id_food_order, id_product, quantity, product_name, price, total, status",
+                            `${idFoodOrder},${idProduct},1,${rows[0].name},${rows[0].price},${rows[0].price}, 1`
                         )
-                        connection.query(query, function(err, rows, fields) {
-                            if (err) {
-                                response.error = err
-                                response.status = 500
-                            } else {
-                                response.error = rows
-                                response.status = 200
-                            }
-                            res.send(response)
-                            res.end()
-                        })
-                        connection.end()
-                    } else {
-                        query = select(
-                            "product",
-                            "*",
-                            `id_product = ${idProduct}`
-                        )
-                        connection.query(query, function(err, rows, fields) {
-                            if (err) {
-                                response.error = err
-                                response.status = 500
-                            } else {
-                                rows = JSON.stringify(rows)
-                                rows = JSON.parse(rows)
-                                if (rows[0] != undefined) {
-                                    query = insert(
-                                        "food_order_description",
-                                        "id_food_order, id_product, quantity, product_name, price, total",
-                                        `${id},${idProduct},1,${rows[0].name},${rows[0].price},${rows[0].price}`
-                                    )
-                                    connection.query(query, function(err, rows, fields) {
-                                        if (err) {
-                                            response.error = err
-                                            response.status = 500
-                                            console.log(err);
-                                        } else {
-                                            response.error = rows
-                                            response.status = 200
-                                        }
-                                        res.send(response)
-                                        res.end()
-                                    })
-                                    connection.end()
-                                }
-                            }
-                        })
+                        return database.query(query)
                     }
-                }
-            })
-
+                 })
+                 .then( rows => {
+                     response.data = rows
+                     response.status = 200
+                     res.send(response)
+                     res.end()
+                     return database.close()
+                 })
         } catch (e) {
             response.status = 500
             console.log(e)
@@ -402,12 +352,15 @@ router.post('/logical/delete', (req, res) => {
     }
 })
 
-var select = (table, columns = "*", where, join = "") => {
+var select = (table, columns = "*", where, join = "", groupBy = "") => {
     let w = ""
     if (where != "")
         w = "WHERE"
+    let g = ""
+    if (groupBy != "")
+        g = "GROUP BY"
 
-    let query = `SELECT ${columns} FROM ${table} ${join} ${w} ${where}`
+    let query = `SELECT ${columns} FROM ${table} ${join} ${w} ${where} ${g} ${groupBy}`
     return query
 }
 
