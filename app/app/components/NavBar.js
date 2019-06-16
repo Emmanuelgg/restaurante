@@ -24,6 +24,12 @@ class NavBar extends Component {
 
                                 </Link>
                             </li>
+                            <li className={"nav-item " + (this.active == "food_order" ? "active" : "")} >
+                                <Link prefetch href="/food_order">
+                                    <a className="nav-link">Ordenes </a>
+
+                                </Link>
+                            </li>
                             <li className={"nav-item " + (this.active == "managment" ? "active" : "")}>
                                 <Link prefetch href="/managment">
                                     <a className="nav-link">Administración</a>

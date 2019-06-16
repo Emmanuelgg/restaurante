@@ -53,6 +53,8 @@ class ManageFoodOrder extends Component {
         this.getProductGrid = this.getProductGrid.bind(this)
         this.getDiningTableOrder = this.getDiningTableOrder.bind(this)
         this.getFoodOrderDescription = this.getFoodOrderDescription.bind(this)
+        this.confirmCloseFoodOrder = this.confirmCloseFoodOrder.bind(this)
+        this.closeFoodOrder = this.closeFoodOrder.bind(this)
     }
 
     componentDidMount() {
@@ -60,18 +62,7 @@ class ManageFoodOrder extends Component {
     }
 
     handleEventClickSubtractFoodOrderDescription(values) {
-        let foodOrderDesciption = this.state.foodOrderDesciption.find(
-            item => {
-                return item.actions == id
-            }
-        )
-        if (foodOrderDesciption.quantity <= 0) {
-            this.handleEventClickDeleteFoodOrderDescription(id)
-            return
-        }
-        let newQuantity = foodOrderDesciption.quantity-1
-        let newTotal = newQuantity*foodOrderDesciption.unit
-        fetch(`${ENV.API_ROUTE}update`, {
+        fetch(`${ENV.API_ROUTE}delete`, {
             method: "post",
             cors: "cors",
             headers: {
@@ -80,9 +71,9 @@ class ManageFoodOrder extends Component {
             },
             body: JSON.stringify({
                 table: "food_order_description",
-                id: id,
-                columns: "quantity, total",
-                values: `${newQuantity},${newTotal}`
+                where: `id_food_order = ${values.idFoodOrder} AND id_product = ${values.idProduct}`,
+                orderBy: "id_food_order_description DESC",
+                limit: "1"
             })
         })
         .then(response => {return response.json()})
@@ -93,7 +84,7 @@ class ManageFoodOrder extends Component {
         })
     }
 
-    handleEventClickDeleteFoodOrderDescription(id) {
+    handleEventClickDeleteFoodOrderDescription(values) {
         fetch(`${ENV.API_ROUTE}delete`, {
             method: "post",
             cors: "cors",
@@ -103,7 +94,7 @@ class ManageFoodOrder extends Component {
             },
             body: JSON.stringify({
                 table: "food_order_description",
-                id: id
+                where: `id_food_order = ${values.idFoodOrder} AND id_product = ${values.idProduct}`
             })
         })
         .then(response => {return response.json()})
@@ -234,6 +225,36 @@ class ManageFoodOrder extends Component {
         })
     }
 
+    confirmCloseFoodOrder() {
+        $("#modalCloseFoodOrder").modal("show")
+    }
+
+    closeFoodOrder() {
+        fetch(`${ENV.API_ROUTE}update`, {
+            method: "post",
+            cors: "cors",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                table: "food_order",
+                id: this.state.foodOrder.id_food_order,
+                columns: "total,status",
+                values: `${this.state.foodOrder.total},2`,
+                update_at: true
+            })
+        })
+        .then(response => {return response.json()})
+        .then(res => {
+            if (res.status != 200)
+                return "Error"
+            this.getFoodOrderDescription()
+            $("#modalCloseFoodOrder").modal("hide")
+            $("#modalManageFoodOrder").modal("hide")
+        })
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -251,14 +272,19 @@ class ManageFoodOrder extends Component {
                                         <b>Total: ${this.state.foodOrder.total}</b>
                                     </h5>
                                 </div>
-
-
                                 <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div className="modal-body">
                                 <div className="row">
+                                    <div className="col-12 text-right">
+                                        <button type="button" className="ml-2  btn btn-primary" onClick={this.confirmCloseFoodOrder}>
+                                            Finalizar
+                                        </button>
+                                    </div>
+                                    <br/>
+                                    <br/>
                                     <div className="col-12 col-md-6">
                                         <DataTable
                                             noHeader={true}
@@ -279,6 +305,29 @@ class ManageFoodOrder extends Component {
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="ml-2 btn btn-white btn-outline-white" data-dismiss="modal">Cerrar</button>
+                                <button type="button" className="ml-2  btn btn-primary" onClick={this.confirmCloseFoodOrder}>
+                                    Finalizar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="modal" id="modalCloseFoodOrder" tabIndex="-1" role="dialog">
+                    <div className="modal-dialog" role="document">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">¿Desea cerrar la Orden: #{this.state.foodOrder.id_food_order}?</h5>
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div className="modal-body">
+                                <h1 className="title-brackground-white text-center">Total de orden:</h1>
+                                <h1 className="title-brackground-white text-center">${this.state.foodOrder.total}</h1>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="ml-2 btn btn-white btn-outline-white" data-dismiss="modal">Cerrar</button>
+                                <button type="button" className="ml-2  btn btn-primary" onClick={this.closeFoodOrder}>Confirmar</button>
                             </div>
                         </div>
                     </div>

@@ -16,6 +16,10 @@ span.icon {
     color: #fac564 !important;
 }
 
+.title-brackground-white {
+    color: #121618 !important
+}
+
 .modal-title {
     color: #fac564 !important;
 }
@@ -28,6 +32,9 @@ span.icon {
     background: #121618 !important;
     color: #fac564 !important;
 
+}
+.rdt_TableRow {
+    background: #fff !important;
 }
 
 .rdt_TableFooter svg {

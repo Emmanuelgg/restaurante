@@ -126,7 +126,8 @@ router.post('/get', (req, res) => {
             let where = req.body.where != undefined ? req.body.where : ""
             let join = req.body.join != undefined ? req.body.join : ""
             let groupBy = req.body.groupBy != undefined ? req.body.groupBy : ""
-            let query = select(table, columns, where, join, groupBy)
+            let orderBy = req.body.orderBy != undefined ? req.body.orderBy : ""
+            let query = select(table, columns, where, join, groupBy, orderBy)
             connection.query(query, function(err, rows, fields) {
                 if (err) {
                     response.error = err
@@ -224,8 +225,8 @@ router.post('/add/foodOrder', (req, res) => {
                     if (rows[0] != undefined) {
                         query = insert(
                             "food_order_description",
-                            "id_food_order, id_product, quantity, product_name, price, total, status",
-                            `${idFoodOrder},${idProduct},1,${rows[0].name},${rows[0].price},${rows[0].price}, 1`
+                            "id_food_order, id_product, quantity, product_name, price, total, status, created_at, updated_at",
+                            `${idFoodOrder},${idProduct},1,${rows[0].name},${rows[0].price},${rows[0].price},1,${getDateTime()},${getDateTime()}`
                         )
                         return database.query(query)
                     }
@@ -256,8 +257,10 @@ router.post('/delete', (req, res) => {
         try {
             connect()
             let table = req.body.table
-            let id = req.body.id
-            let query = permanentDelete(id, table)
+            let where = req.body.where
+            let orderBy = req.body.orderBy != undefined ? req.body.orderBy : ""
+            let limit = req.body.limit != undefined ? req.body.limit : ""
+            let query = permanentDelete(table, where, orderBy, limit)
             connection.query(query, function(err, rows, fields) {
                 if (err) {
                     response.error = err
@@ -292,11 +295,13 @@ router.post('/update', (req, res) => {
             let id = req.body.id
             let columns = req.body.columns
             let values = req.body.values
+            let updated_at = req.body.update_at != undefined ? req.body.update_at : false
             let query = update(
                 id,
                 table,
                 `${columns}`,
-                `${values}`
+                `${values}`,
+                updated_at
             )
             connection.query(query, function(err, rows, fields) {
                 if (err) {
@@ -352,7 +357,7 @@ router.post('/logical/delete', (req, res) => {
     }
 })
 
-var select = (table, columns = "*", where, join = "", groupBy = "") => {
+var select = (table, columns = "*", where, join = "", groupBy = "", orderBy = "") => {
     let w = ""
     if (where != "")
         w = "WHERE"
@@ -360,7 +365,11 @@ var select = (table, columns = "*", where, join = "", groupBy = "") => {
     if (groupBy != "")
         g = "GROUP BY"
 
-    let query = `SELECT ${columns} FROM ${table} ${join} ${w} ${where} ${g} ${groupBy}`
+    let o = ""
+    if (orderBy != "")
+        o = "GROUP BY"
+
+    let query = `SELECT ${columns} FROM ${table} ${join} ${w} ${where} ${g} ${groupBy} `
     return query
 }
 
@@ -389,10 +398,11 @@ var insert = (table, columns = "", values) => {
     return query
 }
 
-var update = (id, table, columns, values) => {
+var update = (id, table, columns, values, updated_at = false) => {
     columns = columns.replace(" ", "")
     columns = columns.split(",")
     values = values.split(",")
+    updated_at = updated_at ? `, updated_at = '${getDateTime()}'` : ""
     let data = ""
     for (var i = 0; i < columns.length; i++) {
         if (i != columns.length-1)
@@ -400,7 +410,7 @@ var update = (id, table, columns, values) => {
         else
             data += `${columns[i]} = "${values[i]}"`
     }
-    let query = `UPDATE ${table} SET ${data}  WHERE id_${table} = ${id}`
+    let query = `UPDATE ${table} SET ${data} ${updated_at} WHERE id_${table} = ${id}`
     return query
 }
 
@@ -409,8 +419,20 @@ var logicalDelete = (id, table) => {
     return query
 }
 
-var permanentDelete = (id, table) => {
-    let query = `DELETE FROM ${table} WHERE id_${table} = ${id}`
+var permanentDelete = (table, where = "", orderBy = "", limit = "") => {
+    let w = ""
+    if (where != "")
+        w = "WHERE"
+
+    let o = ""
+    if (orderBy != "")
+        o = "ORDER By"
+
+    let l = ""
+    if (orderBy != "")
+        l = "LIMIT"
+
+    let query = `DELETE FROM ${table} ${w} ${where} ${o} ${orderBy} ${l} ${limit}`
     return query
 }
 

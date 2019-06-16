@@ -4,7 +4,7 @@ import NavBar from "../components/NavBar"
 import ProductForm from "../components/ProductForm"
 import DiningTableForm from "../components/DiningTableForm"
 
-function managment() {
+function Managment() {
   return (
     <div>
         <CustomHead />
@@ -31,4 +31,4 @@ function managment() {
   )
 }
 
-export default managment;
+export default Managment;
