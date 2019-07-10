@@ -8,29 +8,29 @@ class CustomHead extends Component {
                 <title>My Restaurant</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
 
-                <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet"/>
-                <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet"/>
-                <link href="https://fonts.googleapis.com/css?family=Nothing+You+Could+Do" rel="stylesheet"/>
-
-                <link rel="stylesheet" href="./static/css/open-iconic-bootstrap.min.css"/>
-                <link rel="stylesheet" href="./static/css/animate.css"/>
-
-                <link rel="stylesheet" href="./static/css/owl.carousel.min.css"/>
-                <link rel="stylesheet" href="./static/css/owl.theme.default.min.css"/>
-                <link rel="stylesheet" href="./static/css/magnific-popup.css"/>
-
-                <link rel="stylesheet" href="./static/css/aos.css"/>
-
-                <link rel="stylesheet" href="./static/css/ionicons.min.css"/>
-
-                <link rel="stylesheet" href="./static/css/bootstrap-datepicker.css"/>
-                <link rel="stylesheet" href="./static/css/jquery.timepicker.css"/>
-
-
-                <link rel="stylesheet" href="./static/css/flaticon.css"/>
-                <link rel="stylesheet" href="./static/css/icomoon.css"/>
-                <link rel="stylesheet" href="./static/css/style.css"/>
-                <link rel="stylesheet" href="./static/css/custom-style.css"/>
+                // <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet"/>
+                // <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet"/>
+                // <link href="https://fonts.googleapis.com/css?family=Nothing+You+Could+Do" rel="stylesheet"/>
+                //
+                // <link rel="stylesheet" href="./static/css/open-iconic-bootstrap.min.css"/>
+                // <link rel="stylesheet" href="./static/css/animate.css"/>
+                //
+                // <link rel="stylesheet" href="./static/css/owl.carousel.min.css"/>
+                // <link rel="stylesheet" href="./static/css/owl.theme.default.min.css"/>
+                // <link rel="stylesheet" href="./static/css/magnific-popup.css"/>
+                //
+                // <link rel="stylesheet" href="./static/css/aos.css"/>
+                //
+                // <link rel="stylesheet" href="./static/css/ionicons.min.css"/>
+                //
+                // <link rel="stylesheet" href="./static/css/bootstrap-datepicker.css"/>
+                // <link rel="stylesheet" href="./static/css/jquery.timepicker.css"/>
+                //
+                //
+                // <link rel="stylesheet" href="./static/css/flaticon.css"/>
+                // <link rel="stylesheet" href="./static/css/icomoon.css"/>
+                // <link rel="stylesheet" href="./static/css/style.css"/>
+                // <link rel="stylesheet" href="./static/css/custom-style.css"/>
 
                 <script src="./static/js/jquery.min.js"></script>
                 <script src="./static/js/jquery-migrate-3.0.1.min.js"></script>
