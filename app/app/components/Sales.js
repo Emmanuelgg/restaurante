@@ -1,6 +1,8 @@
 import React, {Component} from "react"
 import DataTable from 'react-data-table-component';
-//import DatePicker from 'react-date-picker';
+import DatePicker from 'react-date-picker/dist/entry.nostyle';
+import 'react-date-picker/dist/DatePicker.css';
+import 'react-calendar/dist/Calendar.css';
 
 import ENV from "../config.js"
 
@@ -51,7 +53,8 @@ class Sales extends Component {
                 }
 
               },
-            ]
+          ],
+          date: new Date(),
         }
 
         this.getFoodOrderCompleted = this.getFoodOrderCompleted.bind(this)
@@ -64,6 +67,8 @@ class Sales extends Component {
     getFoodOrderDescription() {
 
     }
+
+    onChange = date => this.setState({ date })
 
     getFoodOrderCompleted() {
         this.setState({totalSale: 0.00})
@@ -115,8 +120,11 @@ class Sales extends Component {
         return (
             <div className="container">
                 <div className="row">
-                    <div className="col-8">
-                    
+                    <div className="col-12 text-center">
+                        <DatePicker
+                          onChange={this.onChange}
+                          value={this.state.date}
+                        />
                     </div>
                 </div>
                 <div className="row">

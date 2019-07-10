@@ -24,3 +24,4 @@ npm install react --save
 npm install react-dom --save  
 npm install react-data-table-component styled-components --save
 npm install @zeit/next-css --save
+npm install react-date-picker --save
