@@ -20,6 +20,10 @@ npm install multer --save
 npm install --save sequelize
 npm install --save mysql2
 npm install dotenv --save
+npm install --save sequelize-cli -g
+
+# Run sequelize-cli commands
+docker-compose run api node_modules/.bin/sequelize [command]
 
 Compose App
 npm install next --save  
