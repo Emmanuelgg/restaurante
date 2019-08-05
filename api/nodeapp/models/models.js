@@ -35,6 +35,12 @@ const Category = sequelize.define('categories', {
 })
 // Sync all models that aren't already in the database
 sequelize.sync()
+// sequelize.sync({ alter: true }).then(() => {
+//   console.log(chalk.green('database synced :)'))
+//   console.log('disconnecting...')
+// }).catch(e => {
+//   console.log(e)
+// })
 
 // Force sync all models
 // sequelize.sync({force: true})
