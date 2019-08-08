@@ -1,3 +1,4 @@
+
 select option {
     background: #121618 !important;
     color: rgba(255, 255, 255, 0.9) !important;
@@ -74,6 +75,9 @@ span.icon {
 
 .product-grid {
     background: #121618 !important;
+    overflow: scroll;
+    height: 550px;
+
 }
 
 .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
@@ -83,6 +87,15 @@ span.icon {
 
 .container-grid {
     padding: 10px;
+}
+
+.btn-pay {
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.title-total-sales{
+    color: #fac564 !important;
 }
 
 /* .modal-title {

@@ -279,8 +279,8 @@ class ManageFoodOrder extends Component {
                             <div className="modal-body">
                                 <div className="row">
                                     <div className="col-12 text-right">
-                                        <button type="button" className="ml-2  btn btn-primary" onClick={this.confirmCloseFoodOrder}>
-                                            Finalizar
+                                        <button type="button" className="ml-2  btn btn-primary btn-pay" onClick={this.confirmCloseFoodOrder}>
+                                            Cobrar
                                         </button>
                                     </div>
                                     <br/>
@@ -305,8 +305,8 @@ class ManageFoodOrder extends Component {
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="ml-2 btn btn-white btn-outline-white" data-dismiss="modal">Cerrar</button>
-                                <button type="button" className="ml-2  btn btn-primary" onClick={this.confirmCloseFoodOrder}>
-                                    Finalizar
+                                <button type="button" className="ml-2  btn btn-primary btn-pay" onClick={this.confirmCloseFoodOrder}>
+                                    Cobrar
                                 </button>
                             </div>
                         </div>
