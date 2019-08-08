@@ -3,6 +3,7 @@ const router = express.Router()
 const app = express()
 const multer = require('multer')
 const mysql = require("mysql")
+const sequelize = require("../models/models")
 
 const storage = multer.diskStorage({
     destination: './public/files/',
@@ -17,11 +18,11 @@ var connection = null
 
 var connect = () => {
     connection = mysql.createConnection({
-      host     : 'mysqlserver',
-      user     : 'root',
-      password : '123456',
-      database : "db_rest",
-      port     : "3306",
+      host     : process.env.DB_HOST,
+      user     : process.env.DB_USER,
+      password : process.env.DB_PASSWORD,
+      database : process.env.DB_NAME,
+      port     : process.env.DB_PORT,
       multipleStatements: true
     })
     connection.connect()

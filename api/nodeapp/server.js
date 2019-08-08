@@ -39,7 +39,7 @@ app.use('/out', express.static('out'))
 app.use('/api', api)
 
 app.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname + '/out/index.html'))
+  res.sendFile(path.join(__dirname + '/index.html'))
 })
 
 

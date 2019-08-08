@@ -6,6 +6,7 @@ api/db_rest/
 api/nodeapp/node_modules/*
 api/conf/
 api/nodeapp/out/
+api/nodeapp/.env
 
 
 
